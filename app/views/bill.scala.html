@@ -1,0 +1,33 @@
+@(msgs: List[Message], msgForm: Form[(String, String)])
+@*
+*@
+
+@import helper._
+
+@main("订单确认") {
+	<h2>留言</h2>
+	<ul>
+		@* *@
+		@msgs.map { message =>
+			<li>
+				@* *@
+				<p><strong>@message.name</strong></p>
+				@* *@
+				<p>@message.content</p>
+			</li>
+		}
+	</ul>
+
+	<hr/>
+	<h2>输入留言</h2>
+	@* *@
+	@form(routes.Application.postMsg) {
+		@* *@
+		@inputText(msgForm("name"), '_label -> "名字")
+		@* *@
+		@inputText(msgForm("content"), '_label -> "内容")
+
+		@* *@
+		<input type="submit" value="发送">
+	}
+}
