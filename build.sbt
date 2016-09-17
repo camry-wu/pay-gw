@@ -9,4 +9,15 @@ libraryDependencies ++= Seq(
   "org.webjars" % "bootstrap" % "2.3.1"
 )
 
+libraryDependencies ++= Seq(
+    play-jdbc,
+    jdbc,
+    cache,
+    ws,
+    "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % Test,
+    "mysql" % "mysql-connector-java" % "5.1.38"
+)
+
+libraryDependencies += "com.typesafe.play" % "anorm_2.11" % "2.5.2"
+
 playScalaSettings
