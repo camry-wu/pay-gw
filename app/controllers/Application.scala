@@ -5,12 +5,12 @@ import play.api.templates.Html
 import models._
 
 object Application extends Controller {
-  def index = Action {
-    Ok(views.html.index("Hello Play Framework, camry!", 200))
-  }
+	def index = Action {
+		Ok(views.html.user(0))
+	}
 
   def bill = Action {
-    Ok(views.html.main("订单确认")(Html("去支付")))
+    Ok(views.html.main(Html("去支付")))
   }
 
   def view = Action {

@@ -1,65 +1,74 @@
+
 package controllers
 
-import javax.inject.Inject
+import models.User
 
-import scala.collection.mutable.ListBuffer;
+import play.api.Logger
+import play.api.data._
+import play.api.data.Forms._
+import play.api.libs.json.Json
+import play.api.mvc._
 
-import anorm._
-import play.api.db.DB;
+import scala.concurrent.Future
 
-import play.api.libs.json.Json;
-import play.api.libs.json.JsPath;
-import play.api.libs.json.Writes;
+object UserController extends Controller {
 
-import play.api.mvc.{Action, Controller}
-import play.api.templates.Html
-import models._
+	def get(oid:Long) = Action.async {
+		User.getById(oid) map {
+			case Some(user:User) => Ok(Json.toJson(user))
+			case _ => NoContent
+		}
+	}
 
-//@Singleton
-class UserController @Inject()(db: Database) extends Controller {
-    implicit val userWrites: Writes[User] = (
-        (JsPath \ "oid").write[Int] and
-        (JsPath \ "pubId").write[String] and
-        (JsPath \ "openId").write[String] and
-        (JsPath \ "career").write[String]
-    ) (unlift(User:unapply))
+	def find(openId:String) = Action.async {
+		User.findByOpenId(openId) map {
+			case users:List[User] => Ok(Json.toJson(users))
+			case _ => NoContent
+		}
+	}
 
-    implicit val userResponseWriters: Writes[UserResponse] = (
-        (JsPath \ "currentPage").write[Int] and
-        (JsPath \ "totalPages").write[Int] and
-        (JsPath \ "data").write[List[User]]
-    ) (unlift(UserResponse:unapply))
+	def post = Action.async { implicit request =>
+		val form = Form(
+			"openId" -> text
+		)
 
-    def user = Action {
-        Ok(views.html.user("play-angular-bootstrap-demo"));
-    }
+		form.bindFromRequest match {
+			case form:Form[String] if !form.hasErrors => {
+				val openId = form.get
 
-    def list = Action {
-        var list = new ListBuffer[User]()
-        UserResponse.saveUser(new User(1, "", "openId", "carrer"))
-        /*
-        val conn = db.getConnection()
-        try {
-            val stmt = conn.createStatement
-            val rs = stmt.executeQuery("select * from user where id < 4")
-            while (rs.next()) {
-                val openId: String = rs.getString("openId")
-                var oid: Int = rs.getInt("oid")
-                var user = new User(oid, "", openId, "")
-                UserResponse.saveUser(user)
-            }
-        } finally {
-            conn.close();
-        }
-        */
+				User.create(openId, "openIdSrc", "career") map {
+					case Some(oid:Long) => Created(Json.obj("created" -> oid))
+					case _ => InternalServerError(Json.obj("created" -> false))
+				}
+			}
+			case _ => Future { BadRequest(Json.obj("reason" -> "Could not bind POST data to form.")) }
+		}
+	}
 
-        UserResponse.getUserResponse = new UserResponse(1, 10, UserResponse.userList)
-        val json = Json.toJson(UserResponse.getUserResponse)
-        Ok(json)
-    }
+	def put(oid:Long) = Action.async { implicit request =>
 
-    def listJson = Action {
-        val json = Json.toJson(Place.list)
-        Ok(json)
-    }
+		val form = Form(
+			"name" -> text
+		)
+
+		form.bindFromRequest match {
+			case form:Form[String] if !form.hasErrors => {
+				val mobile = form.get
+
+				User.update(oid, mobile, "career") map {
+					case rows:Int if rows > 0 => Accepted(Json.obj("updated" -> true))
+					case _ => InternalServerError(Json.obj("updated" -> false))
+				}
+			}
+			case _ => Future { BadRequest(Json.obj("reason" -> "Could not bind POST data to form.")) }
+		}
+	}
+
+	def delete(oid:Long) = Action.async {
+		User.delete(oid) map {
+			case rows:Int if rows > 0 => Accepted(Json.obj("deleted" -> true))
+			case _ => InternalServerError(Json.obj("deleted" -> false))
+		}
+	}
+
 }
