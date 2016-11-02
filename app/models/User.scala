@@ -40,13 +40,13 @@ object User extends ((
     	str("PubId") ~
     	str("OpenId") ~
     	str("OpenIdSrc") ~
-    	str("Mobile") ~
+    	get[Option[String]]("Mobile") ~
     	date("InsertTime") ~
     	date("LastModify") ~
-    	bool("IsActive") ~
+    	int("IsActive") ~
     	int("Version") map {
 			case	oid~pubId~openId~openIdSrc~mobile~insertTime~lastModify~isActive~version =>
-				User(oid,pubId,openId,openIdSrc,mobile,new DateTime(insertTime),new DateTime(lastModify),isActive,version)
+				User(oid,pubId,openId,openIdSrc,mobile.getOrElse(""),new DateTime(insertTime),new DateTime(lastModify),(isActive==1),version)
     	}
 
 	def getById(oid:Long) = Future {
@@ -112,6 +112,7 @@ object User extends ((
 		}
 	}
 
+	// 注意，还要加入版本验证
 	def update(oid:Long, mobile:String, career:String) = Future {
 		DB.withConnection { implicit connection =>
 			SQL(
