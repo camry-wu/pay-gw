@@ -1,0 +1,63 @@
+@(navId:Int)
+
+@**********************************
+* Helper generating nav bar       *
+***********************************@
+@getTitle(id: Int) = @{
+	var ret: String = ""
+	id match {
+		case 0 => ret = "订单"
+		case 1 => ret = "期刊"
+		case 2 => ret = "用户"
+		case 3 => ret = "商品"
+		case 4 => ret = "设置"
+		case _ => ret = "其他"
+	}
+	ret
+}
+@createNavbar(id: Int, link: String) = {
+	@if(id == navId) {
+					<li class="active">
+	} else {
+					<li class="">
+	}
+						<a href="@link">@getTitle(id)</a>
+					</li>
+}
+
+<!-- Navbar
+    ================================================== -->
+<div class="navbar navbar-inverse navbar-fixed-top">
+	<div class="navbar-inner">
+		<div class="container">
+			<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="brand" href="./index.html">WTY管理后台</a>
+			<div class="nav-collapse collapse">
+				<ul class="nav">
+					@createNavbar(0, "./")
+					@createNavbar(1, "./")
+					@createNavbar(2, "./")
+					@createNavbar(3, "./")
+					@createNavbar(4, "./")
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Subhead
+================================================== -->
+<header class="jumbotron subhead" id="overview">
+	<div class="container">
+	<!--
+		<h1>订单管理</h1>
+		<p class="lead">WTY订单管理</p>
+	-->
+		<h1>@navId</h1>
+		<p class="lead">W</p>
+	</div>
+</header>

@@ -3,6 +3,7 @@ package models
 import play.api.libs.json._
 
 import anorm._
+import anorm.ParameterValue
 import anorm.ParameterValue._
 import anorm.SqlParser._
 import scala.concurrent.Future
@@ -51,6 +52,7 @@ object User extends ((
 
 	def getById(oid:Long) = Future {
 		DB.withConnection { implicit connection =>
+			val ps = Seq[anorm.ParameterValue](oid)
 			SQL(
 				"""
 					SELECT
@@ -67,7 +69,7 @@ object User extends ((
 					WHERE Oid = {oid};
 				"""
 			).on(
-				'oid -> oid
+				'oid -> ps(0)
 			).as(users.singleOpt)
 		}
 	}

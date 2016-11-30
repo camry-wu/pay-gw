@@ -6,7 +6,7 @@ import models._
 
 object Application extends Controller {
 	def index = Action {
-		Ok(views.html.user(0))
+		Ok(views.html.userlist(0))
 	}
 
   def bill = Action {
