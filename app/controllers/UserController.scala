@@ -13,9 +13,22 @@ import scala.concurrent.Future
 
 object UserController extends Controller {
 
+	val logger = Logger(this.getClass())
+
+	def view = Action {
+		Ok(views.html.user(0))
+	}
+
 	def get(oid:Long) = Action.async {
 		User.getById(oid) map {
 			case Some(user:User) => Ok(Json.toJson(user))
+			case _ => NoContent
+		}
+	}
+
+	def list() = Action.async {
+		User.findByOpenId("") map {
+			case users:List[User] => Ok(Json.toJson(users))
 			case _ => NoContent
 		}
 	}

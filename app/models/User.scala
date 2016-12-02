@@ -75,6 +75,13 @@ object User extends ((
 	}
 
 	def findByOpenId(openId:String) = Future {
+		/*
+		val users = List[User] (
+			new User(1L, "pubId", "openId", "openIdSrc", "mobile", now, now, true, 1),
+			new User(2L, "pubId-2", "openId-2", "openIdSrc", "mobile-2", now, now, true, 1)
+		);
+		users
+		*/
 		DB.withConnection { implicit connection =>
 			SQL(
 				"""

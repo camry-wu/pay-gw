@@ -1,8 +1,6 @@
-@(navId:Int)
-
 @main {
 
-@navbar(navId)
+@navbar(0)
 
 <div class="container">
 
@@ -53,6 +51,7 @@
 				<div class="page-header">
 					<h1>表格</h1>
 				</div>
+				<table id="table"></table>
 			</section>
 
 
@@ -99,5 +98,20 @@
 	</div>
 </div>
 
-
-}
+	} {
+<script language="javascript">
+$('#table').bootstrapTable({
+	url: '/user/list',
+	columns: [{
+		field: 'pubId',
+		title: 'ID'
+	}, {
+		field: 'openId',
+		title: 'Name'
+	}, {
+		field: 'mobile',
+		title: 'Mobile'
+	}]
+});
+</script>
+	}

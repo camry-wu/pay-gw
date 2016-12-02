@@ -1,5 +1,9 @@
+@(pageScript:Html)
 <script src="@routes.Assets.at("js/jquery-2.1.0.min.js")" type="text/javascript"></script>
 <script src="@routes.WebJarAssets.at(WebJarAssets.locate("bootstrap.min.js"))" type="text/javascript"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/locale/bootstrap-table-zh-CN.min.js"></script>
+
 <script src="@routes.Assets.at("js/app.js")" type="text/javascript"></script>
 
 <!-- 全局统计代码
@@ -7,3 +11,4 @@
 var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
 document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F079fac161efc4b2a6f31e80064f14e82' type='text/javascript'%3E%3C/script%3E"));
 </script> -->
+@pageScript

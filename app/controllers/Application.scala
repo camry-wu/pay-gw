@@ -6,12 +6,12 @@ import models._
 
 object Application extends Controller {
 	def index = Action {
-		Ok(views.html.userlist(0))
+		Ok(views.html.userlist())
 	}
 
-  def bill = Action {
-    Ok(views.html.main(Html("去支付")))
-  }
+	def bill = Action {
+		Ok(views.html.userlist())
+	}
 
   def view = Action {
 	  Ok(views.html.bill(Message.list, Message.form))

@@ -8,6 +8,8 @@ GET     /bill                       controllers.Application.bill()
 GET		/view						controllers.Application.view()
 POST	/postMsg					controllers.Application.postMsg()
 
+GET     /user						controllers.UserController.view()
+GET     /user/list					controllers.UserController.list()
 GET     /user/:id					controllers.UserController.get(id:Long)
 PUT     /user/:id					controllers.UserController.put(id:Long)
 DELETE  /user/:id					controllers.UserController.delete(id:Long)
