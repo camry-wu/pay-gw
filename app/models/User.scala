@@ -1,5 +1,7 @@
 package models
 
+import java.util.UUID
+
 import play.api.libs.json._
 
 import anorm._
@@ -191,7 +193,7 @@ object User extends ((
 	def create(openId:String, openIdSrc:String, career:String) = Future {
 		val insertTime = now
 		val lastModify = now
-		val pubId = "uuid"
+		val pubId = UUID.randomUUID.toString();
 
 		DB.withConnection { implicit connection =>
 			SQL(
