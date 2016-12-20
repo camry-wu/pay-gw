@@ -27,13 +27,8 @@ object UserController extends Controller {
 		}
 	}
 
-	def list() = Action.async {	request =>
-		val limit = request.getQueryString("limit")
-		val offset = request.getQueryString("offset")
-		println(limit)
-		println(offset)
-
-		User.findByOpenId("") map {
+	def list(limit: Int, offset: Int) = Action.async {	request =>
+		User.list(limit, offset) map {
 			case users:UserArray => Ok(Json.toJson(users))
 			case _ => NoContent
 		}

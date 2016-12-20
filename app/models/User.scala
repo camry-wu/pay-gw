@@ -150,6 +150,34 @@ object User extends ((
 		new UserArray(total, data)
 	}
 
+	def list(limit:Int, offset: Int) = Future {
+		val total:Long = internalCountAll().getOrElse(0L)
+		val data = DB.withConnection { implicit connection =>
+			SQL(
+				"""
+					SELECT
+						Oid,
+						PubId,
+						OpenId,
+						OpenIdSrc,
+						Mobile,
+						InsertTime,
+						LastModify,
+						IsActive,
+						Version
+					FROM User
+					Order By InsertTime desc
+					Limit {offset},{limit}
+				"""
+			).on(
+				'limit -> limit,
+				'offset -> offset
+			).as(users *)
+		}
+
+		new UserArray(total, data)
+	}
+
 	def countAll() = Future {
 		internalCountAll()
 	}
