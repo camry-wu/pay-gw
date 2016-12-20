@@ -1,0 +1,90 @@
+@*
+ * This template takes a single argument, a String containing a
+ * message to display
+**@
+@(message: String)
+
+<html ng-app>
+<head>
+    <link rel='shortcut icon' type='image/png' href='@routes.Assets.at("images/favicon.png")'>
+    <link rel='stylesheet' href='@routes.WebJarAssets.at(WebJarAssets.locate("bootstrap.min.css"))'>
+    <script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("jquery.min.js"))'></script>
+    <script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("bootstrap.min.js"))'></script>
+    <script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("bootstrap-paginator.js"))'></script>
+    <script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("angular.min.js"))'></script>
+</head>
+
+<body ng-controller-"listCtrl" data-ng-init="stratload(1)">
+<center><h1>@message</h1><center>
+<table class="table">
+    <thead>
+    <tr>
+        <th>oid</th>
+        <th>openId</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="record in records">
+        <td>{{record.id}}</td>
+        <td>{{record.openId}}</td>
+    </tr>
+    </tbody>
+</table>
+
+<ul id="pagination">
+</ul>
+<script type="text/javascript">
+    function pager($scope, currentPage, totalPages) {
+        var options = {
+            bootstrapMajorVersion: 3,
+            currentPage: currentPage,
+            totalPages: totalPages,
+            itemTexts: function(type, page, current) {
+                switch(type) {
+                    case "first":
+                        return "首页";
+                    case "prev":
+                        return "上一页";
+                    case "next":
+                        return "下一页";
+                    case "last":
+                        return "最后一页";
+                    case "page":
+                        return "" + page;
+                }
+            },
+            onPageClicked: function(event, originalEvent, type, page) {
+                loadData($scope, page)
+            }
+        };
+        $('#pagination").bootstrapPaginator(options);
+    }
+
+    function loadData($scope, page) {
+        $.ajax({
+            type: "GET",
+            url: "list",
+            data: {
+                page: page,
+                pageSize: 2
+            },
+            dataType: "json",
+            success: function(json) {
+                var currentPage = json.currentPage;
+                var totalPages = json.totalPages;
+                pager($scope, currentPage, totalPages);
+                $scope.$apply(function() {
+                    $scope.records = json.data;
+                });
+            }
+        });
+    }
+
+    function listCtrl($scope) {
+        $scope.startload = function(page) {
+            loadData($scope, page);
+        };
+    }
+</script>
+</body>
+</html>

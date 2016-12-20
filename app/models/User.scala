@@ -2,7 +2,10 @@ package models
 
 import java.util.UUID
 
+import org.joda.time.format._
 import play.api.libs.json._
+import play.api.libs.json.Reads._
+import play.api.libs.functional.syntax._
 
 import anorm._
 import anorm.ParameterValue
@@ -24,6 +27,22 @@ case class User(
 	version		: Int
 )
 
+case class UserArray(total: Long, rows: Seq[User])
+
+object UserArray {
+	implicit val userArrayJsonWrites = new Writes[UserArray] {
+		def writes(dataArr: UserArray) = Json.obj(
+			"total" -> dataArr.total,
+			"rows" -> dataArr.rows
+		)
+	}
+
+	implicit val userArrayReads : Reads[UserArray] = (
+		(__ \ "total").read[Long] and
+		(__ \ "rows").read[Seq[User]]
+	)(UserArray.apply _)
+}
+
 object User extends ((
 	Long,
 	String,
@@ -35,6 +54,35 @@ object User extends ((
 	Boolean,
 	Int
 ) => User) {
+
+	implicit object dateTimeJsonWrites extends Writes[DateTime] {
+		val dateFormat: DateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")
+		def writes(o: DateTime) = JsString(dateFormat.print(o.getMillis))
+	}
+
+	implicit val userJsonWrites: Writes[User] = (
+		(__ \ "oid").write[Long] and
+		(__ \ "pubId").write[String] and
+		(__ \ "openId").write[String] and
+		(__ \ "openIdSrc").write[String] and
+		(__ \ "mobile").write[String] and
+		(__ \ "insertTime").write[DateTime] and
+		(__ \ "lastModify").write[DateTime] and
+		(__ \ "isActive").write[Boolean] and
+		(__ \ "version").write[Int]
+	)(unlift(User.unapply))
+
+	implicit val userJsonReads : Reads[User] = (
+		(__ \ "oid").read[Long] and
+		(__ \ "pubId").read[String] and
+		(__ \ "openId").read[String] and
+		(__ \ "openIdSrc").read[String] and
+		(__ \ "mobile").read[String] and
+		(__ \ "insertTime").read[DateTime] and
+		(__ \ "lastModify").read[DateTime] and
+		(__ \ "isActive").read[Boolean] and
+		(__ \ "version").read[Int]
+	)(User.apply _)
 
 	implicit val jsonFormat = Json.format[User]
 
@@ -77,14 +125,8 @@ object User extends ((
 	}
 
 	def findByOpenId(openId:String) = Future {
-		/*
-		val users = List[User] (
-			new User(1L, "pubId", "openId", "openIdSrc", "mobile", now, now, true, 1),
-			new User(2L, "pubId-2", "openId-2", "openIdSrc", "mobile-2", now, now, true, 1)
-		);
-		users
-		*/
-		DB.withConnection { implicit connection =>
+		val total:Long = internalCountAll().getOrElse(0L)
+		val data = DB.withConnection { implicit connection =>
 			SQL(
 				"""
 					SELECT
@@ -104,9 +146,15 @@ object User extends ((
 				'openId -> openId
 			).as(users *)
 		}
+
+		new UserArray(total, data)
 	}
 
 	def countAll() = Future {
+		internalCountAll()
+	}
+
+	def internalCountAll() = {
 		DB.withConnection { implicit connection =>
 			val result = SQL(
 				"""

@@ -1,4 +1,5 @@
 import play.Project._
+import com.github.play2war.plugin._
 
 name := """pay-gw"""
 
@@ -33,6 +34,10 @@ scalacOptions ++= Seq(
   "-language:implicitConversions"
 )
 
+// lazy val root = (project in file(".")).enablePlugins(PlayScala)
+
 playScalaSettings
 
-// lazy val root = (project in file(".")).enablePlugins(PlayScala)
+Play2WarPlugin.play2WarSettings
+
+Play2WarKeys.servletVersion := "2.5"

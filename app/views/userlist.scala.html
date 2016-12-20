@@ -26,6 +26,8 @@
 				<div class="page-header">
 					<h1>表格</h1>
 				</div>
+				<div id="toolbar">
+				</div>
 				<table id="table"></table>
 			</section>
 
@@ -100,8 +102,30 @@
 
 	} {
 <script language="javascript">
+function queryUserParams(params) {
+	var temp = {
+		limit: params.limit,
+		offset: params.offset
+	};
+	return temp;
+}
+
 $('#table').bootstrapTable({
 	url: '/user/list',
+	dataType: "json",
+	method: "GET",
+	toolbar: "#toolbar",
+	queryParams: queryUserParams,
+	cache: false,
+	//singleSelect: false,
+	//locale: "zh-CN",
+	//search: true,
+	pagination: true,
+	paginationLoop: true,
+	pageNumber: 1,
+	pageSize: 1,
+	pageList: [1, 25, 50, 100],
+	sidePagination: "server",
 	columns: [{
 		field: 'pubId',
 		title: 'ID'
@@ -111,6 +135,9 @@ $('#table').bootstrapTable({
 	}, {
 		field: 'mobile',
 		title: 'Mobile'
+	}, {
+		field: 'lastModify',
+		title: 'LastModify'
 	}]
 });
 </script>
