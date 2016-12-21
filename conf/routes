@@ -10,7 +10,7 @@ POST	/postMsg					controllers.Application.postMsg()
 
 # 当方法内有参数但没有在 url 中显式指定，会在 queryString 中找相应的参数，String 类型
 GET     /user						controllers.UserController.view()
-GET     /user/list					controllers.UserController.list(limit: Int, offset: Int)
+GET     /user/list					controllers.UserController.list(limit: Int, offset: Int, openId: String)
 GET     /user/:id					controllers.UserController.get(id:Long)
 PUT     /user/:id					controllers.UserController.put(id:Long)
 DELETE  /user/:id					controllers.UserController.delete(id:Long)

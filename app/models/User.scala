@@ -125,7 +125,7 @@ object User extends ((
 	}
 
 	def findByOpenId(openId:String) = Future {
-		val total:Long = internalCountAll().getOrElse(0L)
+		val total:Long = internalCountAll(openId).getOrElse(0L)
 		val data = DB.withConnection { implicit connection =>
 			SQL(
 				"""
@@ -150,8 +150,10 @@ object User extends ((
 		new UserArray(total, data)
 	}
 
-	def list(limit:Int, offset: Int) = Future {
-		val total:Long = internalCountAll().getOrElse(0L)
+	def list(limit:Int, offset: Int, openId: String) = Future {
+		val total:Long = internalCountAll(openId).getOrElse(0L)
+		println("*" + openId + "*")
+		println(total)
 		val data = DB.withConnection { implicit connection =>
 			SQL(
 				"""
@@ -166,10 +168,12 @@ object User extends ((
 						IsActive,
 						Version
 					FROM User
+					WHERE OpenId LIKE '%' || {openId} || '%'
 					Order By InsertTime desc
 					Limit {offset},{limit}
 				"""
 			).on(
+				'openId -> openId,
 				'limit -> limit,
 				'offset -> offset
 			).as(users *)
@@ -189,6 +193,26 @@ object User extends ((
 					SELECT COUNT(1) count
 					FROM User u;
 				"""
+			).apply()
+
+			try {
+				Some(result.head[Long]("count"))
+			} catch {
+				case e:Exception => None
+			}
+		}
+	}
+
+	def internalCountAll(openId: String) = {
+		DB.withConnection { implicit connection =>
+			val result = SQL(
+				"""
+					SELECT COUNT(1) count
+					FROM User u
+					WHERE u.OpenId LIKE '%' || {openId} || '%';
+				"""
+			).on(
+				'openId -> openId
 			).apply()
 
 			try {

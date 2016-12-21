@@ -27,6 +27,8 @@
 					<h1>表格</h1>
 				</div>
 				<div id="toolbar">
+					OpenId: <input id="openId" type="text">
+					<input id="searchUserBtn" type="button" value="search">
 				</div>
 				<table id="table"></table>
 			</section>
@@ -103,19 +105,20 @@
 	} {
 <script language="javascript">
 function queryUserParams(params) {
-	var temp = {
-		limit: params.limit,
-		offset: params.offset
-	};
-	return temp;
+	var a = params;
+	a.openId = $("#openId").val();
+	return a;
 }
+
+$('#searchUserBtn').on('click', function() {
+	$("#table").bootstrapTable('refresh');
+});
 
 $('#table').bootstrapTable({
 	url: '/user/list',
 	dataType: "json",
 	method: "GET",
 	toolbar: "#toolbar",
-	queryParams: queryUserParams,
 	cache: false,
 	//singleSelect: false,
 	//locale: "zh-CN",
@@ -125,6 +128,8 @@ $('#table').bootstrapTable({
 	pageNumber: 1,
 	pageSize: 1,
 	pageList: [1, 25, 50, 100],
+	queryParams: queryUserParams,
+	queryParamsType: "limit",
 	sidePagination: "server",
 	columns: [{
 		field: 'pubId',

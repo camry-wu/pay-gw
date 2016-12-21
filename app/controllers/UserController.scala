@@ -27,8 +27,8 @@ object UserController extends Controller {
 		}
 	}
 
-	def list(limit: Int, offset: Int) = Action.async {	request =>
-		User.list(limit, offset) map {
+	def list(limit: Int, offset: Int, openId: String) = Action.async {	request =>
+		User.list(limit, offset, openId) map {
 			case users:UserArray => Ok(Json.toJson(users))
 			case _ => NoContent
 		}
