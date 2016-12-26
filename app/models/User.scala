@@ -3,6 +3,7 @@ package models
 import java.util.UUID
 
 import org.joda.time.format._
+import play.api.Logger
 import play.api.libs.json._
 import play.api.libs.json.Reads._
 import play.api.libs.functional.syntax._
@@ -54,6 +55,7 @@ object User extends ((
 	Boolean,
 	Int
 ) => User) {
+	val logger = Logger(this.getClass())
 
 	implicit object dateTimeJsonWrites extends Writes[DateTime] {
 		val dateFormat: DateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")
@@ -125,7 +127,8 @@ object User extends ((
 	}
 
 	def findByOpenId(openId:String) = Future {
-		val total:Long = internalCountAll(openId).getOrElse(0L)
+		val likeOpenId = "%" + openId + "%";
+		val total:Long = internalCountAll(likeOpenId).getOrElse(0L)
 		val data = DB.withConnection { implicit connection =>
 			SQL(
 				"""
@@ -140,10 +143,10 @@ object User extends ((
 						IsActive,
 						Version
 					FROM User
-					WHERE OpenId LIKE '%' || {openId} || '%';
+					WHERE OpenId LIKE {openId};
 				"""
 			).on(
-				'openId -> openId
+				'openId -> likeOpenId
 			).as(users *)
 		}
 
@@ -151,9 +154,9 @@ object User extends ((
 	}
 
 	def list(limit:Int, offset: Int, openId: String) = Future {
-		val total:Long = internalCountAll(openId).getOrElse(0L)
-		println("*" + openId + "*")
-		println(total)
+		val likeOpenId = "%" + openId + "%";
+		val total:Long = internalCountAll(likeOpenId).getOrElse(0L)
+		logger.info("select count: %d".format(total))
 		val data = DB.withConnection { implicit connection =>
 			SQL(
 				"""
@@ -168,12 +171,12 @@ object User extends ((
 						IsActive,
 						Version
 					FROM User
-					WHERE OpenId LIKE '%' || {openId} || '%'
+					WHERE OpenId LIKE {openId}
 					Order By InsertTime desc
 					Limit {offset},{limit}
 				"""
 			).on(
-				'openId -> openId,
+				'openId -> likeOpenId,
 				'limit -> limit,
 				'offset -> offset
 			).as(users *)
@@ -209,7 +212,7 @@ object User extends ((
 				"""
 					SELECT COUNT(1) count
 					FROM User u
-					WHERE u.OpenId LIKE '%' || {openId} || '%';
+					WHERE u.OpenId LIKE {openId};
 				"""
 			).on(
 				'openId -> openId

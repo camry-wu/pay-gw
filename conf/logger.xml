@@ -8,15 +8,28 @@
 		</encoder>
 	</appender>
 
-	<logger name="play" level="INFO" />
-	<logger name="application" level="INFO" />
+    <logger name="com.jolbox.bonecp" level="DEBUG">
+		<appender-ref ref="STDOUT" />
+	</logger>
+
+	<logger name="play" level="INFO">
+		<appender-ref ref="STDOUT" />
+	</logger>
+
+	<logger name="application" level="INFO">
+		<appender-ref ref="STDOUT" />
+	</logger>
 
 	<!-- Off these ones as they are annoying, and anyway we manage configuration ourself -->
 	<logger name="com.avaje.ebean.config.PropertyMapLoader" level="OFF" />
 	<logger name="com.avaje.ebeaninternal.server.core.XmlConfigLoader" level="OFF" />
 	<logger name="com.avaje.ebeaninternal.server.lib.BackgroundThread" level="OFF" />
 
-	<root level="ERROR">
+	<logger name="org.jdbcdslog.ConnectionLogger" level="DEBUG"  /> <!-- Won' log connections -->
+	<logger name="org.jdbcdslog.StatementLogger"  level="INFO" /> <!-- Will log all statements -->
+	<logger name="org.jdbcdslog.ResultSetLogger"  level="DEBUG"  /> <!-- Won' log result sets -->
+
+	<root level="INFO">
 		<appender-ref ref="STDOUT" />
 	</root>
 
