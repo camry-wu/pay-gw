@@ -245,7 +245,6 @@ object User extends ((
 		}
 	}
 
-
 	def delete(oid:Long) = Future {
 		DB.withConnection { implicit connection =>
 			SQL(

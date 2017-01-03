@@ -8,7 +8,7 @@
 		</encoder>
 	</appender>
 
-    <logger name="com.jolbox.bonecp" level="DEBUG">
+    <logger name="com.jolbox.bonecp" level="INFO">
 		<appender-ref ref="STDOUT" />
 	</logger>
 
