@@ -19,7 +19,8 @@ GET     /user/find/:openId			controllers.UserController.find(openId:String)
 POST    /user						controllers.UserController.post
 
 # 配置管理
-GET     /conf						controllers.conf.ConfController.listPayChannel()
+GET     /conf						controllers.conf.ConfController.index()
+GET     /conf/payChannel/list		controllers.conf.ConfController.listPayChannel(limit: Int, offset: Int, keyword: String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

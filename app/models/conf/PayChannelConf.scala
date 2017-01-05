@@ -26,7 +26,7 @@ case class PayChannelConf (
 	/**
 	 * 主键.
 	 */
-	oid				: String,
+	oid				: Long,
 
 	/**
 	 * 渠道号.
@@ -127,7 +127,7 @@ object PayChannelConfArray {
 }
 
 object PayChannelConf extends ((
-	String,
+	Long,
 	String,
 	String,
 	String,
@@ -153,7 +153,7 @@ object PayChannelConf extends ((
 	}
 
 	implicit val payChannelConfJsonWrites: Writes[PayChannelConf] = (
-		(__ \ "oid").write[String] and
+		(__ \ "oid").write[Long] and
 		(__ \ "channelId").write[String] and
 		(__ \ "channelName").write[String] and
 		(__ \ "channelDomain").write[String] and
@@ -173,7 +173,7 @@ object PayChannelConf extends ((
 	)(unlift(PayChannelConf.unapply))
 
 	implicit val payChannelConfJsonReads : Reads[PayChannelConf] = (
-		(__ \ "oid").read[String] and
+		(__ \ "oid").read[Long] and
 		(__ \ "channelId").read[String] and
 		(__ \ "channelName").read[String] and
 		(__ \ "channelDomain").read[String] and
@@ -195,7 +195,7 @@ object PayChannelConf extends ((
 	implicit val jsonFormat = Json.format[PayChannelConf]
 
 	val payChannelConfs =
-		str("Oid") ~
+		int("Oid") ~
     	str("ChannelId") ~
     	str("ChannelName") ~
     	get[Option[String]]("ChannelDomain") ~
@@ -258,7 +258,7 @@ object PayChannelConf extends ((
 						LastModify,
 						IsActive,
 						Version
-					FROM PayChannelConf
+					FROM BizChannel
 					WHERE ChannelId LIKE {keyword}
 					OR ChannelName LIKE {keyword}
 					Order By InsertTime desc
@@ -283,7 +283,7 @@ object PayChannelConf extends ((
 			val result = SQL(
 				"""
 					SELECT COUNT(1) c
-					FROM PayChannelConf;
+					FROM BizChannel;
 				"""
 			).fold[Long](0L){ (c, row) => c + row[Long](1) }
 
@@ -299,7 +299,7 @@ object PayChannelConf extends ((
 			val result = SQL(
 				"""
 					SELECT COUNT(1) c
-					FROM PayChannelConf p
+					FROM BizChannel p
 					WHERE p.ChannelId LIKE {keyword}
 					OR p.ChannelName LIKE {keyword};
 				"""

@@ -22,7 +22,7 @@
 					<h1>表格</h1>
 				</div>
 				<div id="toolbar" class="input-append">
-					<input id="openId" type="text" class="span2" placeholder="OpenId">
+					<input id="keyword" type="text" class="span2" placeholder="Keyword">
 					<button id="searchUserBtn" class="btn" type="button">Search</button>
 				</div>
 				<table id="table"></table>
@@ -47,9 +47,9 @@
 
 	} {
 <script language="javascript">
-function queryUserParams(params) {
+function queryChannelParams(params) {
 	var a = params;
-	a.openId = $("#openId").val();
+	a.keyword = $("#keyword").val();
 	return a;
 }
 
@@ -58,7 +58,7 @@ $('#searchUserBtn').on('click', function() {
 });
 
 $('#table').bootstrapTable({
-	url: '/user/list',
+	url: '/conf/payChannel/list',
 	dataType: "json",
 	method: "GET",
 	toolbar: "#toolbar",
@@ -69,20 +69,20 @@ $('#table').bootstrapTable({
 	pagination: true,
 	paginationLoop: true,
 	pageNumber: 1,
-	pageSize: 1,
-	pageList: [1, 25, 50, 100],
-	queryParams: queryUserParams,
+	pageSize: 10,
+	pageList: [10, 25, 50, 100],
+	queryParams: queryChannelParams,
 	queryParamsType: "limit",
 	sidePagination: "server",
 	columns: [{
-		field: 'pubId',
+		field: 'channelId',
 		title: 'ID'
 	}, {
-		field: 'openId',
+		field: 'channelName',
 		title: 'Name'
 	}, {
-		field: 'mobile',
-		title: 'Mobile'
+		field: 'secretKey',
+		title: 'key'
 	}, {
 		field: 'lastModify',
 		title: 'LastModify'
