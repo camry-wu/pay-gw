@@ -36,5 +36,5 @@ CREATE TABLE `Address` (
 
 # --- !Downs
 
-drop table `user`;
-drop table `address`;
+drop table `User`;
+drop table `Address`;

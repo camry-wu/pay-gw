@@ -237,7 +237,7 @@ object PayChannelConf extends ((
 		val likeKeyword = "%" + keyword + "%";
 		val total:Long = internalCountAll(likeKeyword).getOrElse(0L)
 		logger.info("select count: %d".format(total))
-		val data = DB.withConnection { implicit connection =>
+		val data = DB.withConnection("pay") { implicit connection =>
 			SQL(
 				"""
 					SELECT
@@ -279,7 +279,7 @@ object PayChannelConf extends ((
 	}
 
 	def internalCountAll() = {
-		DB.withConnection { implicit connection =>
+		DB.withConnection("pay") { implicit connection =>
 			val result = SQL(
 				"""
 					SELECT COUNT(1) c
@@ -295,7 +295,7 @@ object PayChannelConf extends ((
 	}
 
 	def internalCountAll(keyword: String) = {
-		DB.withConnection { implicit connection =>
+		DB.withConnection("pay") { implicit connection =>
 			val result = SQL(
 				"""
 					SELECT COUNT(1) c
