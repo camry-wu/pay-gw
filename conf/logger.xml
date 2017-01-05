@@ -8,6 +8,7 @@
 		</encoder>
 	</appender>
 
+	<!-- 配置这个会影响 sql 显示 -->
     <logger name="com.jolbox.bonecp" level="INFO">
 		<appender-ref ref="STDOUT" />
 	</logger>

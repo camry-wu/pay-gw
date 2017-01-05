@@ -156,7 +156,7 @@ object User extends ((
 	def list(limit:Int, offset: Int, openId: String) = Future {
 		val likeOpenId = "%" + openId + "%";
 		val total:Long = internalCountAll(likeOpenId).getOrElse(0L)
-		logger.info("select count: %d".format(total))
+		logger.info("select [%s] count: %d".format(likeOpenId, total))
 		val data = DB.withConnection { implicit connection =>
 			SQL(
 				"""
@@ -196,7 +196,7 @@ object User extends ((
 					SELECT COUNT(1) c
 					FROM User u;
 				"""
-			).fold[Long](0L){ (c, _) => c + 1 }
+			).fold[Long](0L){ (c, row) => c + row[Long](1) }
 
 			result match {
 				case Right(count) => Some(count)
@@ -209,17 +209,17 @@ object User extends ((
 		DB.withConnection { implicit connection =>
 			val result = SQL(
 				"""
-					SELECT COUNT(1) c
+					SELECT COUNT(1) as c
 					FROM User u
 					WHERE u.OpenId LIKE {openId};
 				"""
 			).on(
 				'openId -> openId
-			).fold[Long](0L){ (c, _) => c + 1 }
+			).fold[Long](0L){ (c, row) => c + row[Long](1) }
 
 			result match {
-				case Right(count) => Some(count)
-				case Left(e) => None
+				case Right(count) => { Some(count) }
+				case Left(e) =>  { None }
 			}
 		}
 	}

@@ -285,7 +285,7 @@ object PayChannelConf extends ((
 					SELECT COUNT(1) c
 					FROM PayChannelConf;
 				"""
-			).fold[Long](0L){ (c, _) => c + 1 }
+			).fold[Long](0L){ (c, row) => c + row[Long](1) }
 
 			result match {
 				case Right(count) => Some(count)
@@ -305,7 +305,7 @@ object PayChannelConf extends ((
 				"""
 			).on(
 				'keyword -> keyword
-			).fold[Long](0L){ (c, _) => c + 1 }
+			).fold[Long](0L){ (c, row) => c + row[Long](1) }
 
 			result match {
 				case Right(count) => Some(count)
