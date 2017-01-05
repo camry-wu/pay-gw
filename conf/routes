@@ -3,7 +3,7 @@
 # ~~~~
 
 GET     /                           controllers.Application.index()
-GET     /index.html                 controllers.Application.index()
+#GET     /index.html                 controllers.Application.index()
 GET     /bill                       controllers.Application.bill()
 
 GET		/view						controllers.Application.view()

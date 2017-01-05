@@ -102,7 +102,7 @@ case class PayChannelConf (
 	/**
 	 * 逻辑删除标志位.
 	 */
-	isActive		: Int,
+	isActive		: Boolean,
 
 	/**
 	 * 版本.
@@ -142,7 +142,7 @@ object PayChannelConf extends ((
 	String,
 	Option[DateTime],
 	Option[DateTime],
-	Int,
+	Boolean,
 	Int
 ) => PayChannelConf) {
 	val logger = Logger(this.getClass())
@@ -168,7 +168,7 @@ object PayChannelConf extends ((
 		(__ \ "secretKey").write[String] and
 		(__ \ "insertTime").write[Option[DateTime]] and
 		(__ \ "lastModify").write[Option[DateTime]] and
-		(__ \ "isActive").write[Int] and
+		(__ \ "isActive").write[Boolean] and
 		(__ \ "version").write[Int]
 	)(unlift(PayChannelConf.unapply))
 
@@ -188,7 +188,7 @@ object PayChannelConf extends ((
 		(__ \ "secretKey").read[String] and
 		(__ \ "insertTime").read[Option[DateTime]] and
 		(__ \ "lastModify").read[Option[DateTime]] and
-		(__ \ "isActive").read[Int] and
+		(__ \ "isActive").read[Boolean] and
 		(__ \ "version").read[Int]
 	)(PayChannelConf.apply _)
 
@@ -229,7 +229,7 @@ object PayChannelConf extends ((
 					secretKey.getOrElse(""),
 					Option(new DateTime(insertTime)),
 					Option(new DateTime(lastModify)),
-					isActive,
+					(isActive == 1),
 					version)
     	}
 
@@ -282,15 +282,14 @@ object PayChannelConf extends ((
 		DB.withConnection { implicit connection =>
 			val result = SQL(
 				"""
-					SELECT COUNT(1) count
+					SELECT COUNT(1) c
 					FROM PayChannelConf;
 				"""
-			).apply()
+			).fold[Long](0L){ (c, _) => c + 1 }
 
-			try {
-				Some(result.head[Long]("count"))
-			} catch {
-				case e:Exception => None
+			result match {
+				case Right(count) => Some(count)
+				case Left(e) => None
 			}
 		}
 	}
@@ -299,19 +298,18 @@ object PayChannelConf extends ((
 		DB.withConnection { implicit connection =>
 			val result = SQL(
 				"""
-					SELECT COUNT(1) count
+					SELECT COUNT(1) c
 					FROM PayChannelConf p
 					WHERE p.ChannelId LIKE {keyword}
 					OR p.ChannelName LIKE {keyword};
 				"""
 			).on(
 				'keyword -> keyword
-			).apply()
+			).fold[Long](0L){ (c, _) => c + 1 }
 
-			try {
-				Some(result.head[Long]("count"))
-			} catch {
-				case e:Exception => None
+			result match {
+				case Right(count) => Some(count)
+				case Left(e) => None
 			}
 		}
 	}

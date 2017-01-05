@@ -3,7 +3,7 @@ package models
 import java.util.UUID
 
 import org.joda.time.format._
-import play.api.Logger
+//import play.api.Logger
 import play.api.libs.json._
 import play.api.libs.json.Reads._
 import play.api.libs.functional.syntax._
@@ -193,15 +193,14 @@ object User extends ((
 		DB.withConnection { implicit connection =>
 			val result = SQL(
 				"""
-					SELECT COUNT(1) count
+					SELECT COUNT(1) c
 					FROM User u;
 				"""
-			).apply()
+			).fold[Long](0L){ (c, _) => c + 1 }
 
-			try {
-				Some(result.head[Long]("count"))
-			} catch {
-				case e:Exception => None
+			result match {
+				case Right(count) => Some(count)
+				case Left(e) => None
 			}
 		}
 	}
@@ -210,18 +209,17 @@ object User extends ((
 		DB.withConnection { implicit connection =>
 			val result = SQL(
 				"""
-					SELECT COUNT(1) count
+					SELECT COUNT(1) c
 					FROM User u
 					WHERE u.OpenId LIKE {openId};
 				"""
 			).on(
 				'openId -> openId
-			).apply()
+			).fold[Long](0L){ (c, _) => c + 1 }
 
-			try {
-				Some(result.head[Long]("count"))
-			} catch {
-				case e:Exception => None
+			result match {
+				case Right(count) => Some(count)
+				case Left(e) => None
 			}
 		}
 	}
