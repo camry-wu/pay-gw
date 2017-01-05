@@ -21,7 +21,7 @@ import models.AnormExtension._
 /**
  * 渠道配置表.
  */
-case class PayChannelConf (
+case class BizChannel (
 
 	/**
 	 * 主键.
@@ -110,23 +110,23 @@ case class PayChannelConf (
 	version			: Int
 )
 
-case class PayChannelConfArray(total: Long, rows: Seq[PayChannelConf])
+case class BizChannelArray(total: Long, rows: Seq[BizChannel])
 
-object PayChannelConfArray {
-	implicit val payChannelConfArrayJsonWrites = new Writes[PayChannelConfArray] {
-		def writes(dataArr: PayChannelConfArray) = Json.obj(
+object BizChannelArray {
+	implicit val payChannelConfArrayJsonWrites = new Writes[BizChannelArray] {
+		def writes(dataArr: BizChannelArray) = Json.obj(
 			"total" -> dataArr.total,
 			"rows" -> dataArr.rows
 		)
 	}
 
-	implicit val payChannelConfArrayReads : Reads[PayChannelConfArray] = (
+	implicit val payChannelConfArrayReads : Reads[BizChannelArray] = (
 		(__ \ "total").read[Long] and
-		(__ \ "rows").read[Seq[PayChannelConf]]
-	)(PayChannelConfArray.apply _)
+		(__ \ "rows").read[Seq[BizChannel]]
+	)(BizChannelArray.apply _)
 }
 
-object PayChannelConf extends ((
+object BizChannel extends ((
 	Long,
 	String,
 	String,
@@ -144,7 +144,7 @@ object PayChannelConf extends ((
 	Option[DateTime],
 	Boolean,
 	Int
-) => PayChannelConf) {
+) => BizChannel) {
 	val logger = Logger(this.getClass())
 
 	implicit object dateTimeJsonWrites extends Writes[DateTime] {
@@ -152,7 +152,7 @@ object PayChannelConf extends ((
 		def writes(o: DateTime) = JsString(dateFormat.print(o.getMillis))
 	}
 
-	implicit val payChannelConfJsonWrites: Writes[PayChannelConf] = (
+	implicit val payChannelConfJsonWrites: Writes[BizChannel] = (
 		(__ \ "oid").write[Long] and
 		(__ \ "channelId").write[String] and
 		(__ \ "channelName").write[String] and
@@ -170,9 +170,9 @@ object PayChannelConf extends ((
 		(__ \ "lastModify").write[Option[DateTime]] and
 		(__ \ "isActive").write[Boolean] and
 		(__ \ "version").write[Int]
-	)(unlift(PayChannelConf.unapply))
+	)(unlift(BizChannel.unapply))
 
-	implicit val payChannelConfJsonReads : Reads[PayChannelConf] = (
+	implicit val payChannelConfJsonReads : Reads[BizChannel] = (
 		(__ \ "oid").read[Long] and
 		(__ \ "channelId").read[String] and
 		(__ \ "channelName").read[String] and
@@ -190,9 +190,9 @@ object PayChannelConf extends ((
 		(__ \ "lastModify").read[Option[DateTime]] and
 		(__ \ "isActive").read[Boolean] and
 		(__ \ "version").read[Int]
-	)(PayChannelConf.apply _)
+	)(BizChannel.apply _)
 
-	implicit val jsonFormat = Json.format[PayChannelConf]
+	implicit val jsonFormat = Json.format[BizChannel]
 
 	val payChannelConfs =
 		int("Oid") ~
@@ -213,7 +213,7 @@ object PayChannelConf extends ((
     	int("IsActive") ~
     	int("Version") map {
 			case	oid~channelId~channelName~channelDomain~chaInternalIP~chaInternetIP~subChannelId~subChannelName~appId~appName~appLoginKey~appLoginSecretKey~secretKey~insertTime~lastModify~isActive~version =>
-				PayChannelConf(
+				BizChannel(
 					oid,
 					channelId,
 					channelName,
@@ -236,7 +236,6 @@ object PayChannelConf extends ((
 	def list(limit:Int, offset: Int, keyword: String) = Future {
 		val likeKeyword = "%" + keyword + "%";
 		val total:Long = internalCountAll(likeKeyword).getOrElse(0L)
-		logger.info("select count: %d".format(total))
 		val data = DB.withConnection("pay") { implicit connection =>
 			SQL(
 				"""
@@ -271,7 +270,7 @@ object PayChannelConf extends ((
 			).as(payChannelConfs *)
 		}
 
-		new PayChannelConfArray(total, data)
+		new BizChannelArray(total, data)
 	}
 
 	def countAll() = Future {
@@ -316,15 +315,15 @@ object PayChannelConf extends ((
 }
 
 /*
-public class PgwPayChannelConf implements Serializable {
+public class BizChannel implements Serializable {
     // 对应的支付方式配置表列表
-    private List<PgwPayChannelConfPayMethod> list		: 
+    private List<BizChannelPayMethod> list		: 
     
-    public List<PgwPayChannelConfPayMethod> getPayMethodList() {
+    public List<BizChannelPayMethod> getPayMethodList() {
         return list		: 
     }
 
-    public void setPayMethodList(List<PgwPayChannelConfPayMethod> list) {
+    public void setPayMethodList(List<BizChannelPayMethod> list) {
         this.list = list		: 
     }
 }

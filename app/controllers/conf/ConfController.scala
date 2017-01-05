@@ -4,8 +4,8 @@ import play.api.libs.json.Json
 import play.api.mvc.{Action, Controller}
 import play.api.templates.Html
 
-import models.conf.PayChannelConfArray
-import models.conf.PayChannelConf
+import models.conf.BizChannelArray
+import models.conf.BizChannel
 
 import controllers._
 
@@ -15,8 +15,8 @@ object ConfController extends Controller {
 	}
 
 	def listPayChannel(limit: Int, offset: Int, keyword: String) = Action.async { request =>
-		PayChannelConf.list(limit, offset, keyword) map {
-			case channels:PayChannelConfArray => Ok(Json.toJson(channels))
+		BizChannel.list(limit, offset, keyword) map {
+			case channels:BizChannelArray => Ok(Json.toJson(channels))
 			case _ => NoContent
 		}
 	}
