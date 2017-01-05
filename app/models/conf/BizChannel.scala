@@ -260,7 +260,7 @@ object BizChannel extends ((
 					FROM BizChannel
 					WHERE ChannelId LIKE {keyword}
 					OR ChannelName LIKE {keyword}
-					Order By InsertTime desc
+					Order By LastModify desc
 					Limit {offset},{limit}
 				"""
 			).on(

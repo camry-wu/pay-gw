@@ -62,6 +62,7 @@ $('#table').bootstrapTable({
 	dataType: "json",
 	method: "GET",
 	toolbar: "#toolbar",
+	detailView: true,
 	cache: false,
 	//singleSelect: false,
 	//locale: "zh-CN",
@@ -81,12 +82,23 @@ $('#table').bootstrapTable({
 		field: 'channelName',
 		title: 'Name'
 	}, {
-		field: 'secretKey',
-		title: 'key'
-	}, {
 		field: 'lastModify',
-		title: 'LastModify'
-	}]
+		title: '最后更新'
+	}, {
+		field: 'insertTime',
+		title: '创建时间'
+	}],
+
+	// 注册加载子表的事件
+	onExpandRow: function (index, row, $detail) {
+		showPaymethodConf(index, row, $detail);
+	}
 });
+
+function showPaymethodConf(index, row, $detail) {
+	var channelId = row.oid;
+	var key = row.secretKey;
+	$detail.html(channelId + "<br/>" + key + "<br/>");
+}
 </script>
 	}
