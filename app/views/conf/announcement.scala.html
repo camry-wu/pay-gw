@@ -9,8 +9,8 @@
 	<div class="row">
 		<div class="span3 bs-docs-sidebar">
 			<ul class="nav nav-list bs-docs-sidenav">
-				<li><a href="#channelConf"><i class="icon-chevron-right"></i>支付渠道</a></li>
-				<li><a href="#announcement"><i class="icon-chevron-right"></i>公告</a></li>
+				<li><a href="/conf/bizChannelMgr"><i class="icon-chevron-right"></i>支付渠道</a></li>
+				<li><a href="/conf/announcementMgr"><i class="icon-chevron-right"></i>公告</a></li>
 			</ul>
 		</div>
 
@@ -19,26 +19,13 @@
 			================================================== -->
 			<section id="channelConf">
 				<div class="page-header">
-					<h1>表格</h1>
+					<h1>公告</h1>
 				</div>
 				<div id="toolbar" class="input-append">
 					<input id="keyword" type="text" class="span2" placeholder="Keyword">
-					<button id="searchUserBtn" class="btn" type="button">Search</button>
+					<button id="searchAnnouncementBtn" class="btn" type="button">Search</button>
 				</div>
 				<table id="table"></table>
-			</section>
-
-
-			<!-- Typography
-			================================================== -->
-			<section id="announcement">
-				<div class="page-header">
-				<h1>公告</h1>
-				</div>
-				<p>
-				<span class="label label-info">注意！</span>
-				通过加入<code>text-overflow</code>，水平描述列表将会对过长而无法在左栏中完全显示的列名截断掉一部分。而在较窄的视口（宽度）中，会改变成垂直(形式)表述，来适应当前屏幕。
-				</p>
 			</section>
 
 		</div>
@@ -53,12 +40,12 @@ function queryChannelParams(params) {
 	return a;
 }
 
-$('#searchUserBtn').on('click', function() {
+$('#searchAnnouncementBtn').on('click', function() {
 	$("#table").bootstrapTable('refresh');
 });
 
 $('#table').bootstrapTable({
-	url: '/conf/payChannel/list',
+	url: '/conf/announcement/list',
 	dataType: "json",
 	method: "GET",
 	toolbar: "#toolbar",

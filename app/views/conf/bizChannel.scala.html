@@ -1,0 +1,90 @@
+@main {
+
+@navbar(4)
+
+<div class="container">
+
+    <!-- Docs nav
+    ================================================== -->
+	<div class="row">
+		<div class="span3 bs-docs-sidebar">
+			<ul class="nav nav-list bs-docs-sidenav">
+				<li><a href="/conf/bizChannelMgr"><i class="icon-chevron-right"></i>支付渠道</a></li>
+				<li><a href="/conf/announcementMgr"><i class="icon-chevron-right"></i>公告</a></li>
+			</ul>
+		</div>
+
+		<div class="span9">
+			<!-- Tables
+			================================================== -->
+			<section id="channelConf">
+				<div class="page-header">
+					<h1>表格</h1>
+				</div>
+				<div id="toolbar" class="input-append">
+					<input id="keyword" type="text" class="span2" placeholder="Keyword">
+					<button id="searchBizChannelBtn" class="btn" type="button">Search</button>
+				</div>
+				<table id="table"></table>
+			</section>
+		</div>
+	</div>
+</div>
+
+	} {
+<script language="javascript">
+function queryChannelParams(params) {
+	var a = params;
+	a.keyword = $("#keyword").val();
+	return a;
+}
+
+$('#searchBizChannelBtn').on('click', function() {
+	$("#table").bootstrapTable('refresh');
+});
+
+$('#table').bootstrapTable({
+	url: '/conf/bizChannel/list',
+	dataType: "json",
+	method: "GET",
+	toolbar: "#toolbar",
+	detailView: true,
+	cache: false,
+	//singleSelect: false,
+	//locale: "zh-CN",
+	//search: true,
+	pagination: true,
+	paginationLoop: true,
+	pageNumber: 1,
+	pageSize: 10,
+	pageList: [10, 25, 50, 100],
+	queryParams: queryChannelParams,
+	queryParamsType: "limit",
+	sidePagination: "server",
+	columns: [{
+		field: 'channelId',
+		title: 'ID'
+	}, {
+		field: 'channelName',
+		title: 'Name'
+	}, {
+		field: 'lastModify',
+		title: '最后更新'
+	}, {
+		field: 'insertTime',
+		title: '创建时间'
+	}],
+
+	// 注册加载子表的事件
+	onExpandRow: function (index, row, $detail) {
+		showPaymethodConf(index, row, $detail);
+	}
+});
+
+function showPaymethodConf(index, row, $detail) {
+	var channelId = row.oid;
+	var key = row.secretKey;
+	$detail.html(channelId + "<br/>" + key + "<br/>");
+}
+</script>
+	}
