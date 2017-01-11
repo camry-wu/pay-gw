@@ -7,6 +7,9 @@ import play.api.templates.Html
 import models.conf.BizChannelArray
 import models.conf.BizChannel
 
+import models.conf.AnnouncementArray
+import models.conf.Announcement
+
 import controllers._
 
 object ConfController extends Controller {
@@ -30,8 +33,8 @@ object ConfController extends Controller {
 	}
 
 	def listAnnouncement(limit: Int, offset: Int, keyword: String) = Action.async { request =>
-		BizChannel.list(limit, offset, keyword) map {
-			case channels:BizChannelArray => Ok(Json.toJson(channels))
+		Announcement.list(limit, offset, keyword) map {
+			case anns:AnnouncementArray => Ok(Json.toJson(anns))
 			case _ => NoContent
 		}
 	}
