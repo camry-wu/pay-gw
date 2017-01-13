@@ -147,11 +147,6 @@ object BizChannel extends ((
 ) => BizChannel) {
 	val logger = Logger(this.getClass())
 
-	implicit object dateTimeJsonWrites extends Writes[DateTime] {
-		val dateFormat: DateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")
-		def writes(o: DateTime) = JsString(dateFormat.print(o.getMillis))
-	}
-
 	implicit val payChannelConfJsonWrites: Writes[BizChannel] = (
 		(__ \ "oid").write[Long] and
 		(__ \ "channelId").write[String] and

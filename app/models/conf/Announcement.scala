@@ -4,7 +4,6 @@ package models.conf
 import java.util.UUID
 
 import org.joda.time.format._
-//import play.api.Logger
 import play.api.libs.json._
 import play.api.libs.json.Reads._
 import play.api.libs.functional.syntax._
@@ -19,7 +18,7 @@ import models._
 import models.AnormExtension._
 
 /**
- * 渠道配置表.
+ * 公告表，并且也保存配置修改后的最新统一版本.
  */
 case class Announcement (
 
@@ -65,8 +64,14 @@ case class Announcement (
 	version			: Int
 )
 
+/**
+ * 公告列表，用于 json 转换.
+ */
 case class AnnouncementArray(total: Long, rows: Seq[Announcement])
 
+/**
+ * 公告列表伴生对象，提供隐式参数.
+ */
 object AnnouncementArray {
 	implicit val announcementConfArrayJsonWrites = new Writes[AnnouncementArray] {
 		def writes(dataArr: AnnouncementArray) = Json.obj(
@@ -81,6 +86,9 @@ object AnnouncementArray {
 	)(AnnouncementArray.apply _)
 }
 
+/**
+ * Announcement 伴生对象，提供缺省的 CRUD 操作.
+ */
 object Announcement extends ((
 	Long,
 	Int,
@@ -93,11 +101,7 @@ object Announcement extends ((
 ) => Announcement) {
 	val logger = Logger(this.getClass())
 
-	implicit object dateTimeJsonWrites extends Writes[DateTime] {
-		val dateFormat: DateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")
-		def writes(o: DateTime) = JsString(dateFormat.print(o.getMillis))
-	}
-
+	// 隐式参数，将 Announcement 转成 json 格式
 	implicit val announcementConfJsonWrites: Writes[Announcement] = (
 		(__ \ "oid").write[Long] and
 		(__ \ "annType").write[Int] and
@@ -109,6 +113,7 @@ object Announcement extends ((
 		(__ \ "version").write[Int]
 	)(unlift(Announcement.unapply))
 
+	// 隐式参数，将 json 转成 Announcement 格式
 	implicit val announcementConfJsonReads : Reads[Announcement] = (
 		(__ \ "oid").read[Long] and
 		(__ \ "annType").read[Int] and
@@ -120,8 +125,10 @@ object Announcement extends ((
 		(__ \ "version").read[Int]
 	)(Announcement.apply _)
 
+	// 隐式参数
 	implicit val jsonFormat = Json.format[Announcement]
 
+	// 从数据库 rs 中解析出 Announcement 对象
 	val announcements =
 		int("Oid") ~
     	int("Type") ~
@@ -131,7 +138,7 @@ object Announcement extends ((
     	date("InsertTime") ~
     	int("IsActive") ~
     	int("Version") map {
-			case	oid~annType~content~startTime~endTime~insertTime~isActive~version =>
+			case oid~annType~content~startTime~endTime~insertTime~isActive~version =>
 				Announcement(
 					oid,
 					annType,
@@ -143,6 +150,9 @@ object Announcement extends ((
 					version)
     	}
 
+	/**
+	 * 根据 keyword 查询公告列表.
+	 */
 	def list(limit:Int, offset: Int, keyword: String) = Future {
 		val likeKeyword = "%" + keyword + "%";
 		val total:Long = internalCountAll(likeKeyword).getOrElse(0L)
@@ -173,10 +183,16 @@ object Announcement extends ((
 		new AnnouncementArray(total, data)
 	}
 
+	/**
+	 * 查询全部公告数量.
+	 */
 	def countAll() = Future {
 		internalCountAll()
 	}
 
+	/**
+	 * 查询全部公告数量.
+	 */
 	def internalCountAll() = {
 		DB.withConnection("pay") { implicit connection =>
 			val result = SQL(
@@ -193,6 +209,9 @@ object Announcement extends ((
 		}
 	}
 
+	/**
+	 * 查询符合 keyword 查询条件的公告数量.
+	 */
 	def internalCountAll(keyword: String) = {
 		DB.withConnection("pay") { implicit connection =>
 			val result = SQL(
@@ -209,6 +228,43 @@ object Announcement extends ((
 				case Right(count) => Some(count)
 				case Left(e) => None
 			}
+		}
+	}
+
+	/**
+	 * 创建一个新的公告.
+	 */
+	def create(ann: Announcement) = Future {
+		val insertTime = now
+
+		DB.withConnection("pay") { implicit connection =>
+			SQL(
+				"""
+					INSERT INTO Announcement (
+						Type,
+						Content,
+						StartTime,
+						EndTime,
+						InsertTime,
+						IsActive,
+						Version
+					) VALUES (
+						{annType},
+						{content},
+						{startTime},
+						{endTime},
+						{insertTime},
+						1,
+						1
+					);
+				"""
+			).on(
+				'annType -> ann.annType,
+				'content -> ann.content,
+				'startTime -> ann.startTime.getOrElse(null),
+				'endTime -> ann.endTime.getOrElse(null),
+				'insertTime -> insertTime
+			).executeInsert()
 		}
 	}
 }

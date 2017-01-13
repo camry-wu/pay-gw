@@ -14,6 +14,7 @@ import anorm.ParameterValue._
 import anorm.SqlParser._
 import scala.concurrent.Future
 
+import models._
 import AnormExtension._
 
 case class User(
@@ -56,11 +57,6 @@ object User extends ((
 	Int
 ) => User) {
 	val logger = Logger(this.getClass())
-
-	implicit object dateTimeJsonWrites extends Writes[DateTime] {
-		val dateFormat: DateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")
-		def writes(o: DateTime) = JsString(dateFormat.print(o.getMillis))
-	}
 
 	implicit val userJsonWrites: Writes[User] = (
 		(__ \ "oid").write[Long] and

@@ -3,6 +3,7 @@ import anorm.SqlParser._
 
 import org.joda.time._
 import org.joda.time.format._
+import play.api.libs.json._
 
 package object models {
 
@@ -61,6 +62,11 @@ package object models {
 			Some(date.get.toDate)
 		else
 			None
+
+	implicit object dateTimeJsonWrites extends Writes[DateTime] {
+		val dateFormat: DateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")
+		def writes(o: DateTime) = JsString(dateFormat.print(o.getMillis))
+	}
 
 	object AnormExtension {
 		val dateFormatGeneration: DateTimeFormatter = DateTimeFormat.forPattern("yyyyMMddHHmmssSS");
