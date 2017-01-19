@@ -1,10 +1,11 @@
 package controllers.conf
 
+import scala.concurrent.Future
+import play.api.data._
+import play.api.data.Forms._
 import play.api.libs.json.Json
 import play.api.mvc.{Action, Controller}
 import play.api.templates.Html
-import play.api.data._
-import play.api.data.Forms._
 
 import models.conf.BizChannelArray
 import models.conf.BizChannel
@@ -12,7 +13,7 @@ import models.conf.BizChannel
 import models.conf.AnnouncementArray
 import models.conf.Announcement
 
-import controllers._
+import utils._
 
 /**
  * 管理配置页面.
@@ -71,12 +72,12 @@ object ConfController extends Controller {
 				"startTime" -> optional(text),
 				"endTime" -> optional(text)
 			)
-			((annType, content, startTime, endTime) => Announcement(0, annType, content, str2DateTime(startTime), str2DateTime(endTime), Some(now.asInstanceOf[models.DateTime]), true, 1))
-			((ann: Announcement) => (ann.annType, ann.content, ann.startTime, ann.endTime))
+			((annType, content, startTime, endTime) => Announcement(0, annType, content, str2DateTime(startTime), str2DateTime(endTime), Some(now.asInstanceOf[DateTime]), true, 1))
+			((ann: Announcement) => Some((ann.annType, ann.content, date2str(ann.startTime), date2str(ann.endTime))))
 		)
 
 		form.bindFromRequest match {
-			case form:Form[String] if !form.hasErrors => {
+			case form:Form[Announcement] if !form.hasErrors => {
 				val ann = form.get
 
 				Announcement.create(ann) map {

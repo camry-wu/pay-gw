@@ -3,6 +3,7 @@ package controllers
 
 import models.UserArray
 import models.User
+import utils._
 
 import play.api.Logger
 import play.api.data._

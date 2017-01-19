@@ -14,6 +14,7 @@ import anorm.ParameterValue._
 import anorm.SqlParser._
 import scala.concurrent.Future
 
+import utils._
 import models._
 import AnormExtension._
 

@@ -3,6 +3,7 @@ package controllers
 import play.api.mvc.{Action, Controller}
 import play.api.templates.Html
 import models._
+import utils._
 
 object Application extends Controller {
 	def index = Action {

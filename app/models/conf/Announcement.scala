@@ -14,8 +14,9 @@ import anorm.ParameterValue._
 import anorm.SqlParser._
 import scala.concurrent.Future
 
+import utils._
 import models._
-import models.AnormExtension._
+import AnormExtension._
 
 /**
  * 公告表，并且也保存配置修改后的最新统一版本.
