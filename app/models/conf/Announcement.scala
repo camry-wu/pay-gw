@@ -138,7 +138,7 @@ object Announcement extends ((
     	date("EndTime") ~
     	date("InsertTime") ~
     	int("IsActive") ~
-    	int("Version") map {
+    	int("Versions") map {
 			case oid~annType~content~startTime~endTime~insertTime~isActive~version =>
 				Announcement(
 					oid,
@@ -168,7 +168,7 @@ object Announcement extends ((
 						EndTime,
 						InsertTime,
 						IsActive,
-						Version
+						Versions
 					FROM Announcement
 					WHERE Content LIKE {keyword}
 					Order By InsertTime desc
@@ -248,7 +248,7 @@ object Announcement extends ((
 						EndTime,
 						InsertTime,
 						IsActive,
-						Version
+						Versions
 					) VALUES (
 						{annType},
 						{content},

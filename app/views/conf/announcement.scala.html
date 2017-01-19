@@ -1,3 +1,6 @@
+@import controllers.conf.ConfController._
+@import helper._
+
 @main {
 
 @navbar(4)
@@ -10,7 +13,7 @@
 		<div class="span3 bs-docs-sidebar">
 			<ul class="nav nav-list bs-docs-sidenav">
 				<li><a href="/conf/bizChannelMgr"><i class="icon-chevron-right"></i>支付渠道</a></li>
-				<li><a href="/conf/announcementMgr"><i class="icon-chevron-right"></i>公告</a></li>
+				<li><a href="/conf/announcementMgr"><i class="icon-chevron-right"></i>公告管理</a></li>
 			</ul>
 		</div>
 
@@ -19,7 +22,15 @@
 			================================================== -->
 			<section id="channelConf">
 				<div class="page-header">
-					<h1>公告</h1>
+					<h1>公告管理</h1>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						查询条件
+					</div>
+					<div class="panel-body">
+						<button id="newAnnouncementBtn" class="btn" data-toggle="modal" data-target="#annModal">Create</button>
+					</div>
 				</div>
 				<div id="toolbar" class="input-append">
 					<input id="keyword" type="text" class="span2" placeholder="Keyword">
@@ -30,6 +41,32 @@
 
 		</div>
 	</div>
+</div>
+<div class="modal fade" id="annModal" tabindex="-1" role="dialog" aria-labelledby="annModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+					&times;
+				</button>
+				<h4 class="modal-title" id="annModalLabel">
+					新建公告
+				</h4>
+			</div>
+			<div class="modal-body">
+				@helper.form(action = controllers.conf.routes.ConfController.newAnnouncement()) {
+					@helper.inputText(announcementForm("annType"))
+					@helper.inputText(announcementForm("content"))
+					@helper.inputText(announcementForm("startTime"))
+					@helper.inputText(announcementForm("endTime"))
+				}
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+				<button type="button" class="btn btn-primary">保存</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal -->
 </div>
 
 	} {

@@ -45,7 +45,7 @@ package object utils {
 	def str2DateTime(sdate: Option[String]) : Option[DateTime] = {
 		sdate match {
 			case Some(s) => Some(new DateTime(dateFormat.parse(s)))
-			case _ => None
+			case _ => Some(now)
 		}
 	}
 

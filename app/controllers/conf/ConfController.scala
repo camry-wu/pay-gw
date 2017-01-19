@@ -15,11 +15,32 @@ import models.conf.Announcement
 
 import utils._
 
+case class AnnouncementForm(
+	annType			: Int,
+	content			: String,
+	startTime		: Option[String],
+	endTime			: Option[String]
+)
+
 /**
  * 管理配置页面.
  *	渠道、公告
  */
 object ConfController extends Controller {
+	/**
+	 * 公告 form
+	 */
+	val announcementForm = Form(
+		mapping(
+			"annType" -> number(min=1, max=2),
+			"content" -> nonEmptyText,
+			"startTime" -> optional(text),
+			"endTime" -> optional(text)
+		)
+		(AnnouncementForm.apply)
+		(AnnouncementForm.unapply)
+	)
+
 	/**
 	 * 配置首页（渠道配置管理页）.
 	 */
@@ -65,20 +86,10 @@ object ConfController extends Controller {
 	 * 新建公告.
 	 */
 	def newAnnouncement = Action.async { implicit request =>
-		val form = Form(
-			mapping(
-				"annType" -> number(min=1, max=2),
-				"content" -> nonEmptyText,
-				"startTime" -> optional(text),
-				"endTime" -> optional(text)
-			)
-			((annType, content, startTime, endTime) => Announcement(0, annType, content, str2DateTime(startTime), str2DateTime(endTime), Some(now.asInstanceOf[DateTime]), true, 1))
-			((ann: Announcement) => Some((ann.annType, ann.content, date2str(ann.startTime), date2str(ann.endTime))))
-		)
-
-		form.bindFromRequest match {
-			case form:Form[Announcement] if !form.hasErrors => {
-				val ann = form.get
+		announcementForm.bindFromRequest match {
+			case announcementForm:Form[AnnouncementForm] if !announcementForm.hasErrors => {
+				val annform = announcementForm.get
+				val ann = Announcement(0, annform.annType, annform.content, str2DateTime(annform.startTime), str2DateTime(annform.endTime), Some(now.asInstanceOf[DateTime]), true, 1)
 
 				Announcement.create(ann) map {
 					case Some(oid:Long) => Created(Json.obj("created" -> oid))
