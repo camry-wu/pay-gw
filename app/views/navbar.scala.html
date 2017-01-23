@@ -19,45 +19,54 @@
 	@if(id == navId) {
 					<li class="active">
 	} else {
-					<li class="">
+					<li>
 	}
-						<a href="@link">@getTitle(id)</a>
+						<a href="@link" onclick="_hmt.push(['_trackEvent', 'docv3-navbar', 'click', '@getTitle(id)'])>@getTitle(id)</a>
 					</li>
 }
 
 <!-- Navbar
     ================================================== -->
-<div class="navbar navbar-inverse navbar-fixed-top">
-	<div class="navbar-inner">
-		<div class="container">
-			<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-			</button>
-			<a class="brand" href="./index.html">WTY管理后台</a>
-			<div class="nav-collapse collapse">
-				<ul class="nav">
+
+    <a id="skippy" class="sr-only sr-only-focusable" href="#content"><div class="container"><span class="skiplink-text">Skip to main content</span></div></a>
+
+    <!-- 导航栏 -->
+    <header class="navbar navbar-static-top bs-docs-nav" id="top">
+        <div class="container">
+            <div class="navbar-header">
+                <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false">
+                    <span class="sr-only">导航栏</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a href="./index.html" class="navbar-brand">首页</a>
+            </div>
+            <nav id="bs-navbar" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
 					@createNavbar(0, "/")
 					@createNavbar(1, "/")
 					@createNavbar(2, "/")
 					@createNavbar(3, "/")
 					@createNavbar(4, "/conf/index")
-				</ul>
-			</div>
-		</div>
-	</div>
-</div>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://mb.bootcss.com" onclick="_hmt.push(['_trackEvent', 'docv3-navbar', 'click', 'themes'])" target="_blank">主题/模板</a></li>
+                    <li><a href="http://www.bootcss.com/" onclick="_hmt.push(['_trackEvent', 'docv3-navbar', 'click', 'V3导航-Bootstrap中文网'])" target="_blank">Bootstrap中文网</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
 
-<!-- Subhead
-================================================== -->
-<header class="jumbotron subhead" id="overview">
-	<div class="container">
-	<!--
-		<h1>订单管理</h1>
-		<p class="lead">WTY订单管理</p>
-	-->
-		<h1>@navId</h1>
-		<p class="lead">W</p>
-	</div>
-</header>
+
+    <!-- 头部 -->
+    <div class="bs-docs-header" id="content" tabindex="-1">
+        <div class="container">
+			<!--
+				<h1>订单管理</h1>
+				<p class="lead">WTY订单管理</p>
+			-->
+            <h1>@navId</h1>
+            <p>W</p>
+        </div>
+    </div>
