@@ -9,7 +9,7 @@ scalaVersion := "2.10.8"
 
 libraryDependencies ++= Seq(
   "org.webjars" %% "webjars-play" % "2.2.2", 
-  "org.webjars" % "bootstrap" % "2.3.1"
+  "org.webjars" % "bootstrap" % "3.3.7"
 )
 
 // libraryDependencies += evolutions
