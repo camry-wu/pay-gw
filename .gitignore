@@ -17,3 +17,4 @@ build.sbt~
 /RUNNING_PID
 /.settings
 activator-sbt-*-shim.sbt
+.DS_Store

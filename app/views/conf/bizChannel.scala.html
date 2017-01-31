@@ -2,33 +2,76 @@
 
 @navbar(4)
 
-<div class="container">
+<div class="container bs-docs-container">
 
-    <!-- Docs nav
-    ================================================== -->
-	<div class="row">
-		<div class="span3 bs-docs-sidebar">
-			<ul class="nav nav-list bs-docs-sidenav">
-				<li><a href="/conf/bizChannelMgr"><i class="icon-chevron-right"></i>支付渠道</a></li>
-				<li><a href="/conf/announcementMgr"><i class="icon-chevron-right"></i>公告管理</a></li>
-			</ul>
-		</div>
-
-		<div class="span9">
-			<!-- Tables
-			================================================== -->
-			<section id="channelConf">
-				<div class="page-header">
-					<h1>支付渠道</h1>
-				</div>
-				<div id="toolbar" class="input-append">
-					<input id="keyword" type="text" class="span2" placeholder="Keyword">
-					<button id="searchBizChannelBtn" class="btn" type="button">Search</button>
-				</div>
-				<table id="table"></table>
-			</section>
-		</div>
+<div class="row">
+<div class="col-md-9" role="main">
+	<!-- less.js isn't IE8-compatible and throws an exception during initialization, so our Blob compatibility check and error messaging code never get called in that case.
+	So we use a conditional comment instead to inform folks about the lack of IE8 support.
+	-->
+	<!--[if lt IE 9]>
+	<style>
+	.bs-customizer,
+	.bs-customizer-import,
+	.bs-docs-sidebar {
+	display: none;
+	}
+	</style>
+	<div class="alert alert-danger">
+	<strong>This site does not support IE9 and below.</strong><br>
+	Please take a second to <a href="http://browsehappy.com/">upgrade to a more modern browser</a>.
 	</div>
+	<![endif]-->
+
+	<!-- 公告栏
+	<div id="defaults-change-alert" class="alert alert-warning alert-dismissible" role="alert">
+		<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		<strong>注意！</strong> <code>Hello</code> 这里可以显示公告信息。
+	</div> -->
+
+	<!-- 页面详细内容 -->
+	<div class="bs-docs-section bs-customizer-import">
+		<h1 id="channels" class="page-header">支付渠道</h1>
+		<p class="lead">不同渠道可以使用不同支付方式，支付到不同的账户中，还可以对渠道的优惠情况做调整。</p>
+		<div class="row">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<h4 class="panel-title">查询条件</h4>
+				</div>
+				<div class="panel-body">
+					<div class="input-append">
+						<input id="keyword" type="text" class="span2" placeholder="关键字"	>
+					    <button id="searchBizChannelBtn" class="btn" type="button">Search</button>
+					</div>
+				</div>
+			</div>
+			<div id="toolbar" class="btn-group">
+				<button id="addChannel" class="btn btn-default" data-toggle="modal" data-target="#annModal">
+					<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增
+				</button>
+				<button id="editChannel" class="btn btn-default">
+					<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>编辑
+				</button>
+				<button id="delChannel" class="btn btn-default">
+					<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>删除
+				</button>
+			</div>
+			<table id="chnTable" class="table table-hover"></table>
+		</div><!-- /.row -->
+	</div>
+</div>
+	
+<div class="col-md-3" role="complementary">
+	<nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm">
+		<ul class="nav bs-docs-sidenav">
+            <li><a href="/conf/bizChannelMgr"><i class="icon-chevron-right"></i>支付渠道</a></li>
+            <li><a href="/conf/announcementMgr"><i class="icon-chevron-right"></i>公告管理</a></li>
+		</ul>
+		<a class="back-to-top" href="#top">返回顶部</a>
+	</nav>
+</div>
+
+</div>
 </div>
 
 	} {
@@ -40,10 +83,10 @@ function queryChannelParams(params) {
 }
 
 $('#searchBizChannelBtn').on('click', function() {
-	$("#table").bootstrapTable('refresh');
+	$("#chnTable").bootstrapTable('refresh');
 });
 
-$('#table').bootstrapTable({
+$('#chnTable').bootstrapTable({
 	url: '/conf/bizChannel/list',
 	dataType: "json",
 	method: "GET",

@@ -7,24 +7,38 @@
 
 @navbar(4)
 
-<div class="container">
+<div class="container bs-docs-container">
 
-    <!-- Docs nav
-    ================================================== -->
-	<div class="row">
-		<div class="span3 bs-docs-sidebar">
-			<ul class="nav nav-list bs-docs-sidenav">
-				<li><a href="/conf/bizChannelMgr"><i class="icon-chevron-right"></i>支付渠道</a></li>
-				<li><a href="/conf/announcementMgr"><i class="icon-chevron-right"></i>公告管理</a></li>
-			</ul>
-		</div>
+<div class="row">
+<div class="col-md-9" role="main">
+	<!-- less.js isn't IE8-compatible and throws an exception during initialization, so our Blob compatibility check and error messaging code never get called in that case.
+	So we use a conditional comment instead to inform folks about the lack of IE8 support.
+	-->
+	<!--[if lt IE 9]>
+	<style>
+	.bs-customizer,
+	.bs-customizer-import,
+	.bs-docs-sidebar {
+	display: none;
+	}
+	</style>
+	<div class="alert alert-danger">
+	<strong>This site does not support IE9 and below.</strong><br>
+	Please take a second to <a href="http://browsehappy.com/">upgrade to a more modern browser</a>.
+	</div>
+	<![endif]-->
 
-		<div class="span9">
-			<!-- Tables
-			================================================== -->
-			<div class="page-header">
-				<h3>公告管理</h3>
-			</div>
+	<!-- 公告栏 -->
+	<div id="defaults-change-alert" class="alert alert-warning alert-dismissible" role="alert">
+		<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		<strong>注意！</strong> <code>Hello</code> 这里可以显示公告信息。
+	</div>
+
+	<!-- 页面详细内容 -->
+	<div class="bs-docs-section bs-customizer-import">
+		<h1 id="tables" class="page-header">公告管理</h1>
+		<p class="lead">每当修改或增加公告时，全局版本号更新；每当修改配置信息时，全局版本号更新。缓存根据最新全局版本号定时载入最新配置信息。</p>
+		<div class="row">
 			<div class="panel panel-primary">
 				<div class="panel-heading">
 					<h4 class="panel-title">查询条件</h4>
@@ -48,10 +62,24 @@
 				</button>
 			</div>
 			<table id="annTable" class="table table-hover"></table>
-
-		</div>
+		</div><!-- /.row -->
 	</div>
 </div>
+	
+<div class="col-md-3" role="complementary">
+	<nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm">
+		<ul class="nav bs-docs-sidenav">
+            <li><a href="/conf/bizChannelMgr"><i class="icon-chevron-right"></i>支付渠道</a></li>
+            <li><a href="/conf/announcementMgr"><i class="icon-chevron-right"></i>公告管理</a></li>
+		</ul>
+		<a class="back-to-top" href="#top">返回顶部</a>
+	</nav>
+</div>
+
+</div>
+</div>
+
+<!-- 模态对话框 -->
 <div class="modal fade hide" id="annModal" tabindex="-1" role="dialog" aria-labelledby="annModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
