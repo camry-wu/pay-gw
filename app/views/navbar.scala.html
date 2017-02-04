@@ -10,19 +10,93 @@
 		case 1 => ret = "期刊"
 		case 2 => ret = "用户"
 		case 3 => ret = "商品"
-		case 4 => ret = "设置"
+		case 4 => ret = "支付"
+		case 5 => ret = "设置"
 		case _ => ret = "其他"
 	}
 	ret
 }
+@hasSubMenu(id: Int) = @{
+	var ret: Boolean = true
+	id match {
+		case 0 => ret = true
+		case 1 => ret = true
+		case 2 => ret = true
+		case 3 => ret = true
+		case 4 => ret = true
+		case 5 => ret = true
+		case _ => ret = false
+	}
+	ret
+}
+@makeSubMenu(id: Int) = @{
+	id match {
+        case 0 =>
+            <ul class="dropdown-menu" role="menu">
+                <li><a href="#">用户单</a></li>
+                <li class="divider">line</li>
+                <li><a href="#">商家单</a></li>
+                <li><a href="#">结算</a></li>
+                <li><a href="#">对账</a></li>
+            </ul>
+        case 1 =>
+            <ul class="dropdown-menu" role="menu">
+                <li><a href="#">开心一刻</a></li>
+                <li><a href="#">职业黄历</a></li>
+                <li><a href="#">生活点滴</a></li>
+                <li class="divider">line</li>
+                <li><a href="#">版面管理</a></li>
+            </ul>
+        case 2 =>
+            <ul class="dropdown-menu" role="menu">
+                <li><a href="#">个人用户</a></li>
+                <li><a href="#">用户地址</a></li>
+                <li class="divider">line</li>
+                <li><a href="#">商家</a></li>
+            </ul>
+        case 3 =>
+            <ul class="dropdown-menu" role="menu">
+                <li><a href="#">商品类目</a></li>
+                <li class="divider">line</li>
+                <li><a href="#">单品</a></li>
+                <li><a href="#">上架商品</a></li>
+                <li class="divider">line</li>
+                <li><a href="#">促销管理</a></li>
+            </ul>
+        case 4 =>
+            <ul class="dropdown-menu" role="menu">
+                <li><a href="#">支付日志</a></li>
+                <li><a href="#">第三方交互</a></li>
+                <li><a href="#">异常支付</a></li>
+                <li class="divider">line</li>
+                <li><a href="#">支付对账</a></li>
+            </ul>
+        case 5 =>
+            <ul class="dropdown-menu" role="menu">
+                <li><a href="/conf/bizChannelMgr">支付渠道</a></li>
+                <li><a href="/conf/announcementMgr">公告管理</a></li>
+                <li><a href="/">测试页面</a></li>
+                <li class="divider">line</li>
+                <li><a href="#">权限管理</a></li>
+                <li><a href="#">管理员</a></li>
+            </ul>
+        case _ =>
+    }
+}
 @createNavbar(id: Int, link: String) = {
 	@if(id == navId) {
-					<li class="active">
+	    <li class="active">
 	} else {
-					<li>
+	    <li>
 	}
-						<a href="@link" onclick="_hmt.push(['_trackEvent', 'docv3-navbar', 'click', '@getTitle(id)'])">@getTitle(id)</a>
-					</li>
+
+    @if(hasSubMenu(id)) {
+            <a href="@link" class="dropdown-toggle" data-toggle="dropdown" onclick="_hmt.push(['_trackEvent', 'docv3-navbar', 'click', '@getTitle(id)'])">@getTitle(id)</a>
+            @makeSubMenu(id)
+    } else {
+            <a href="@link" onclick="_hmt.push(['_trackEvent', 'docv3-navbar', 'click', '@getTitle(id)'])">@getTitle(id)</a>
+    }
+        </li>
 }
 
 <!-- Navbar
@@ -31,7 +105,7 @@
     <a id="skippy" class="sr-only sr-only-focusable" href="#content"><div class="container"><span class="skiplink-text">Skip to main content</span></div></a>
 
     <!-- 导航栏 -->
-    <header class="navbar navbar-static-top bs-docs-nav" id="top">
+    <header class="navbar navbar-static-top bs-docs-nav" id="top" role="navigation">
         <div class="container">
             <div class="navbar-header">
                 <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false">
@@ -48,11 +122,11 @@
 					@createNavbar(1, "/")
 					@createNavbar(2, "/")
 					@createNavbar(3, "/")
-					@createNavbar(4, "/conf/index")
+					@createNavbar(4, "/")
+					@createNavbar(5, "/")
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="http://mb.bootcss.com" onclick="_hmt.push(['_trackEvent', 'docv3-navbar', 'click', 'themes'])" target="_blank">主题/模板</a></li>
-                    <li><a href="http://www.bootcss.com/" onclick="_hmt.push(['_trackEvent', 'docv3-navbar', 'click', 'V3导航-Bootstrap中文网'])" target="_blank">Bootstrap中文网</a></li>
+                    <li><a href="http://www.bootcss.com/" onclick="_hmt.push(['_trackEvent', 'docv3-navbar', 'click', 'Bootstrap中文网'])" target="_blank">Bootstrap中文网</a></li>
                 </ul>
             </nav>
         </div>
