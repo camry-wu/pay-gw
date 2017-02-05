@@ -1,11 +1,39 @@
-@(message: String, amount: Int)
-
 @main {
 
-    <div class="well">
-        <h1>@message</h1>
-        <h3>@amount</h3>
-    </div>
+@navbar(-1)
+
+<div class="container bs-docs-container">
+
+<div class="row">
+<div class="col-md-12" role="main">
+	<!-- less.js isn't IE8-compatible and throws an exception during initialization, so our Blob compatibility check and error messaging code never get called in that case.
+	So we use a conditional comment instead to inform folks about the lack of IE8 support.
+	-->
+	<!--[if lt IE 9]>
+	<style>
+	.bs-customizer,
+	.bs-customizer-import,
+	.bs-docs-sidebar {
+	display: none;
+	}
+	</style>
+	<div class="alert alert-danger">
+	<strong>This site does not support IE9 and below.</strong><br>
+	Please take a second to <a href="http://browsehappy.com/">upgrade to a more modern browser</a>.
+	</div>
+	<![endif]-->
+
+	<!-- 公告栏 -->
+	<div id="defaults-change-alert" class="alert alert-warning alert-dismissible" role="alert">
+		<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		<strong>注意！</strong> 最新消息已经发布。。。
+	</div>
+
+    这里是维护中心。。。
+</div>
+	
+</div>
+</div>
 
 } {
 }

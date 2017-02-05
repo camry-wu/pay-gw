@@ -1,0 +1,134 @@
+@main {
+
+@navbar(5)
+
+<div class="container bs-docs-container">
+
+<div class="row">
+<div class="col-md-9" role="main">
+	<!-- less.js isn't IE8-compatible and throws an exception during initialization, so our Blob compatibility check and error messaging code never get called in that case.
+	So we use a conditional comment instead to inform folks about the lack of IE8 support.
+	-->
+	<!--[if lt IE 9]>
+	<style>
+	.bs-customizer,
+	.bs-customizer-import,
+	.bs-docs-sidebar {
+	display: none;
+	}
+	</style>
+	<div class="alert alert-danger">
+	<strong>This site does not support IE9 and below.</strong><br>
+	Please take a second to <a href="http://browsehappy.com/">upgrade to a more modern browser</a>.
+	</div>
+	<![endif]-->
+
+	<!-- 公告栏 -->
+	<div id="defaults-change-alert" class="alert alert-warning alert-dismissible" role="alert">
+		<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		<strong>注意！</strong> <code>brand-primary</code> 的默认值在最新版本中已经改变，以提高颜色对比度和内容的可访问性。升级 Bootstrap 时，请再次检查你所编译的 CSS。
+	</div>
+
+	<!-- 第一段 -->
+	<div class="bs-docs-section bs-customizer-import">
+		<h1 id="tables" class="page-header">表格</h1>
+		<p class="lead">表格说明...</p>
+		<div class="row">
+			<div id="toolbar" class="input-append">
+				<input id="openId" type="text" class="span2" placeholder="OpenId">
+				<button id="searchUserBtn" class="btn" type="button">Search</button>
+			</div>
+			<table id="table"></table>
+		</div><!-- /.row -->
+	</div>
+
+	<!-- 第二段 -->
+	<div class="bs-docs-section" id="less-section">
+		<h1 id="less" class="page-header">Less 文件</h1>
+		<p class="lead">选择将哪些 Less 文件编译到你自己的定制 Bootstrap 版本中。不确定每个文件的用途吗？请先通读此文档中的<a href="../css/">全局 CSS 样式</a>和<a href="../components/">组件</a>章节。</p>
+		<div class="row">
+		</div><!-- /.row -->
+	</div>
+
+
+	<!-- 第三段 -->
+	<div class="bs-docs-section" id="plugin-section">
+		<h1 id="plugins" class="page-header">jQuery 插件</h1>
+
+		<p class="lead">选择将那些 jQuery 插件包含到你的定制版本中。不确定他们的用途吗？请通读此文档中的 <a href="../javascript/">JavaScript 插件</a>章节。</p>
+		<div class="row">
+		</div>
+	</div>
+
+
+	<!-- 第四段 -->
+	<div class="bs-docs-section">
+		<h1 id="download" class="page-header">下载</h1>
+
+		<p class="lead">庆祝一下！你的定制版 Bootstrap 即将大功告成。只要点击下面的按钮就可以下载了。</p>
+		<div class="bs-customize-download">
+			编译并下载
+		</div>
+	</div><!-- /download -->
+</div>
+	
+<div class="col-md-3" role="complementary">
+	<nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm">
+		<ul class="nav bs-docs-sidenav">
+			<li><a href="#tables">表格</a></li>
+			<li><a href="#less">Less components</a></li>
+			<li><a href="#plugins">jQuery plugins</a></li>
+			<li><a href="#download">Download</a></li>
+		</ul>
+		<a class="back-to-top" href="#top">返回顶部</a>
+	</nav>
+</div>
+
+</div>
+</div>
+
+	} {
+<script language="javascript">
+function queryUserParams(params) {
+	var a = params;
+	a.openId = $("#openId").val();
+	return a;
+}
+
+$('#searchUserBtn').on('click', function() {
+	$("#table").bootstrapTable('refresh');
+});
+
+$('#table').bootstrapTable({
+	url: '/user/list',
+	dataType: "json",
+	method: "GET",
+	toolbar: "#toolbar",
+	cache: false,
+	//singleSelect: false,
+	//locale: "zh-CN",
+	//search: true,
+	pagination: true,
+	paginationLoop: true,
+	pageNumber: 1,
+	pageSize: 1,
+	pageList: [1, 25, 50, 100],
+	queryParams: queryUserParams,
+	queryParamsType: "limit",
+	sidePagination: "server",
+	columns: [{
+		field: 'pubId',
+		title: 'ID'
+	}, {
+		field: 'openId',
+		title: 'Name'
+	}, {
+		field: 'mobile',
+		title: 'Mobile'
+	}, {
+		field: 'lastModify',
+		title: 'LastModify'
+	}]
+});
+</script>
+	}

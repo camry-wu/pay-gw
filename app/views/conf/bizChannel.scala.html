@@ -5,7 +5,7 @@
 <div class="container bs-docs-container">
 
 <div class="row">
-<div class="col-md-9" role="main">
+<div class="col-md-12" role="main">
 	<!-- less.js isn't IE8-compatible and throws an exception during initialization, so our Blob compatibility check and error messaging code never get called in that case.
 	So we use a conditional comment instead to inform folks about the lack of IE8 support.
 	-->
@@ -23,12 +23,6 @@
 	</div>
 	<![endif]-->
 
-	<!-- 公告栏
-	<div id="defaults-change-alert" class="alert alert-warning alert-dismissible" role="alert">
-		<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-		<strong>注意！</strong> <code>Hello</code> 这里可以显示公告信息。
-	</div> -->
-
 	<!-- 页面详细内容 -->
 	<div class="bs-docs-section bs-customizer-import">
 		<h1 id="channels" class="page-header">支付渠道</h1>
@@ -39,10 +33,15 @@
 					<h4 class="panel-title">查询条件</h4>
 				</div>
 				<div class="panel-body">
-					<div class="input-append">
-						<input id="keyword" type="text" class="span2" placeholder="关键字"	>
-					    <button id="searchBizChannelBtn" class="btn" type="button">Search</button>
+                    <form class="form-inline">
+					<div class="form-group">
+                        <label class="sr-only" for="keyword">关键字</label>
+                        <div class="input-group">
+						<input id="keyword" type="text" class="form-control" placeholder="关键字">
+                        </div>
 					</div>
+                    <button id="searchBizChannelBtn" class="btn btn-primary" type="button">搜索</button>
+                    </form>
 				</div>
 			</div>
 			<div id="toolbar" class="btn-group">
@@ -59,16 +58,6 @@
 			<table id="chnTable" class="table table-hover"></table>
 		</div><!-- /.row -->
 	</div>
-</div>
-	
-<div class="col-md-3" role="complementary">
-	<nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm">
-		<ul class="nav bs-docs-sidenav">
-            <li><a href="/conf/bizChannelMgr"><i class="icon-chevron-right"></i>支付渠道</a></li>
-            <li><a href="/conf/announcementMgr"><i class="icon-chevron-right"></i>公告管理</a></li>
-		</ul>
-		<a class="back-to-top" href="#top">返回顶部</a>
-	</nav>
 </div>
 
 </div>
@@ -90,12 +79,22 @@ $('#chnTable').bootstrapTable({
 	url: '/conf/bizChannel/list',
 	dataType: "json",
 	method: "GET",
-	toolbar: "#toolbar",
 	detailView: true,
 	cache: false,
 	//singleSelect: false,
 	//locale: "zh-CN",
 	//search: true,
+	sortable: false,
+	sortOrder: "asc",
+	clickToSelect: true,		//启用点击选中本行
+	searchAlign: "left",		//查询框对齐方式
+	searchOnEnterKey: false,	//回车搜索
+	showRefresh: true,			//刷新按钮
+	showColumns: true,			//列选择按钮
+	toolbar: "#toolbar",
+	toolbarAlign: "right",		//工具栏对齐方式
+	buttonsAlign: "left",		//按钮对齐方式
+	striped: true,              //是否显示行间隔色
 	pagination: true,
 	paginationLoop: true,
 	pageNumber: 1,
@@ -117,6 +116,19 @@ $('#chnTable').bootstrapTable({
 		field: 'insertTime',
 		title: '创建时间'
 	}],
+
+	onClickRow: function(row, $element) {
+		//$element是当前tr的jquery对象
+		$element.css("background-color", "green");
+	},//单击row事件
+	detailView: true,	// 详情折叠显示
+	detailFormatter: function(index, row, element) {
+		var html = '';
+		$.each(row, function(key, val){
+			html += "<p>" + key + ":" + val +  "</p>"
+		});
+		return html;
+	},
 
 	// 注册加载子表的事件
 	onExpandRow: function (index, row, $detail) {

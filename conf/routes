@@ -3,7 +3,8 @@
 # ~~~~
 
 GET     /                           controllers.Application.index()
-#GET     /index.html                 controllers.Application.index()
+GET     /index                      controllers.Application.index()
+GET     /index.html                 controllers.Application.index()
 GET     /bill                       controllers.Application.bill()
 
 GET		/view						controllers.Application.view()
@@ -25,6 +26,7 @@ GET     /conf/bizChannel/list		controllers.conf.ConfController.listBizChannel(li
 GET     /conf/announcementMgr		controllers.conf.ConfController.announcementMgr()
 GET     /conf/announcement/list		controllers.conf.ConfController.listAnnouncement(limit: Int, offset: Int, keyword: String)
 POST    /conf/announcement			controllers.conf.ConfController.newAnnouncement()
+GET     /conf/test			        controllers.conf.ConfController.test()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

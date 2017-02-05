@@ -49,6 +49,13 @@ object ConfController extends Controller {
 	}
 
 	/**
+	 * 测试页面，用于测试各种效果和功能.
+	 */
+	def test = Action {
+		Ok(views.html.conf.test())
+	}
+
+	/**
 	 * 配置首页（渠道配置管理页）.
 	 */
 	def bizChannelMgr = Action {

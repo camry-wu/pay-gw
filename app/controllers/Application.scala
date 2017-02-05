@@ -7,7 +7,7 @@ import utils._
 
 object Application extends Controller {
 	def index = Action {
-		Ok(views.html.userlist())
+		Ok(views.html.index())
 	}
 
 	def bill = Action {
