@@ -83,12 +83,12 @@
 					@helper.input(announcementForm("annType"), '_label -> "公告类型") { (id, name, value, args) =>
                             <div class="radio">
                                 <label>
-                                    <input type="radio" name="@name" value="1" checked>公告
+                                    <input type="radio" id="@id" name="@name" value="1" checked>公告
                                 </label>
                             </div>
                             <div class="radio">
                                 <label>
-                                    <input type="radio" name="@name" value="2">配置变更
+                                    <input type="radio" id="@id" name="@name" value="2">配置变更
                                 </label>
                             </div>
 						<!--<span class="errors">elements.errors.mkString(", ")</span> -->
@@ -97,7 +97,8 @@
 
 					@helper.textarea(
 						announcementForm("content"),
-						args = 'rows -> 3, 'cols -> 50, 'class -> "form-control",
+						args =  'id -> "annContent", 'rows -> 3, 'cols -> 50, 'class -> "form-control",
+                        'tip -> "hello world",
 						'_label -> "内容", 'placeholder -> "公告内容")
 					@helper.inputText(announcementForm("startTime"),
                         args = '_label -> "起始时间", 'class -> "form-control")
@@ -167,7 +168,7 @@ $('#annModal').on('shown.bs.modal', function () {
 function emptyAnnForm() {
 	$(":radio[name='annType']").eq(0).prop("checked", "checked");
 	$(":radio[name='annType']").eq(1).prop("checked", false);
-	$('#content').val("");
+	$('#annContent').val("");
 	$('#startTime').val("");
 	$('#endTime').val("");
 }
@@ -178,7 +179,7 @@ $('#submitAnnouncementBtn').on('click', function() {
 	if (annTypeObj) {
 		annType = parseInt(annTypeObj.val());
 	}
-	var content = $('#content').val();
+	var content = $('#annContent').val();
 	var startTime = $('#startTime').val();
 	var endTime = $('#endTime').val();
 
