@@ -30,6 +30,10 @@ create table `BizChannel` (
 	`AppLoginKey`       varchar(50),						-- 公众号LoginKey
 	`AppLoginSecretKey` varchar(200),						-- 公众号登录秘钥
 	`SecretKey`         varchar(200),						-- 请求秘钥
+	`ChannelType`       tinyint DEFAULT 0,					-- 渠道类型（0 轻应用，1 PC，2 APP）
+	`ResLimitMode`      int(4) DEFAULT 0,					-- 对资源的限制（0 无，1 可使用余额，2 可使用全部资源）
+	`IsOnlyOneVoucher`  tinyint DEFAULT 0,					-- 整个单子是否只允许一张优惠券
+	`IsHideBillPageEnabled`       tinyint DEFAULT 0,		-- 是否直接跳过结算页
     `InsertTime`		datetime DEFAULT NULL,				-- 插入时间
     `LastModify`		datetime DEFAULT NULL,				-- 修改时间
 	`IsActive`			tinyint DEFAULT 1,					-- 逻辑删除标志
@@ -41,6 +45,12 @@ create table `BizChannel` (
 create table `BizChannel_PayMethod` (
 	`Oid`				int(11) not null auto_increment,	-- id
 	`BizChannelId`		varchar(32) not null,				-- 渠道配置编号
+	`PayMethodId`		varchar(32) not null,				-- 支付方式编号
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
+
+-- 特定支付方式配置
+create table `BizChannel_PayMethod` (
+	`Oid`				int(11) not null auto_increment,	-- id
 	`PayMethod`			int(10) not null,					-- 支付方式
 	`SpNo`				varchar(50),						-- 商户号
 	`SpName`			varchar(50),						-- 商户名称

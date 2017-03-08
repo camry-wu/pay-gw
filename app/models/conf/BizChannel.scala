@@ -21,6 +21,7 @@ import models.AnormExtension._
 
 /**
  * 渠道配置表.
+ * 注意：22 个字段的时候 scala 编译不过，但 21 个字段可以编译通过.
  */
 case class BizChannel (
 
@@ -59,7 +60,6 @@ case class BizChannel (
 	 */
 	subChannelId	: String,
 
-
 	/**
 	 * 子渠道名称.
 	 */
@@ -89,6 +89,26 @@ case class BizChannel (
 	 * 秘钥.
 	 */
 	secretKey		: String,
+
+	/**
+	 * 渠道类型（0 轻应用，1 PC，2 APP）.
+	 */
+	channelType				: Int,
+
+	/**
+	 * 对资源的限制（0 无，1 可使用余额，2 可使用全部资源）.
+	 */
+	resLimitMode			: Int,
+
+	/**
+	 * 整个单子是否只允许一张优惠券.
+	 */
+	isOnlyOneVoucher		: Boolean,
+
+	/**
+	 * 是否直接跳过结算页.
+	 */
+	isHideBillPageEnabled	: Boolean,
 
 	/**
 	 * 插入时间.
@@ -141,12 +161,18 @@ object BizChannel extends ((
 	String,
 	String,
 	String,
+	Int,
+	Int,
+	Boolean,
+	Boolean,
 	Option[DateTime],
 	Option[DateTime],
 	Boolean,
 	Int
 ) => BizChannel) {
 	val logger = Logger(this.getClass())
+
+	implicit val jsonFormat = Json.format[BizChannel]
 
 	implicit val payChannelConfJsonWrites: Writes[BizChannel] = (
 		(__ \ "oid").write[Long] and
@@ -162,6 +188,10 @@ object BizChannel extends ((
 		(__ \ "appLoginKey").write[String] and
 		(__ \ "appLoginSecretKey").write[String] and
 		(__ \ "secretKey").write[String] and
+		(__ \ "channelType").write[Int] and
+		(__ \ "resLimitMode").write[Int] and
+		(__ \ "isOnlyOneVoucher").write[Boolean] and
+		(__ \ "isHideBillPageEnabled").write[Boolean] and
 		(__ \ "insertTime").write[Option[DateTime]] and
 		(__ \ "lastModify").write[Option[DateTime]] and
 		(__ \ "isActive").write[Boolean] and
@@ -182,13 +212,15 @@ object BizChannel extends ((
 		(__ \ "appLoginKey").read[String] and
 		(__ \ "appLoginSecretKey").read[String] and
 		(__ \ "secretKey").read[String] and
+		(__ \ "channelType").read[Int] and
+		(__ \ "resLimitMode").read[Int] and
+		(__ \ "isOnlyOneVoucher").read[Boolean] and
+		(__ \ "isHideBillPageEnabled").read[Boolean] and
 		(__ \ "insertTime").read[Option[DateTime]] and
 		(__ \ "lastModify").read[Option[DateTime]] and
 		(__ \ "isActive").read[Boolean] and
 		(__ \ "version").read[Int]
 	)(BizChannel.apply _)
-
-	implicit val jsonFormat = Json.format[BizChannel]
 
 	val payChannelConfs =
 		int("Oid") ~
@@ -204,11 +236,15 @@ object BizChannel extends ((
     	get[Option[String]]("AppLoginKey") ~
     	get[Option[String]]("AppLoginSecretKey") ~
     	get[Option[String]]("SecretKey") ~
+		int("ChannelType") ~
+		int("ResLimitMode") ~
+		int("IsOnlyOneVoucher") ~
+		int("IsHideBillPageEnabled") ~
     	date("InsertTime") ~
     	date("LastModify") ~
     	int("IsActive") ~
     	int("Version") map {
-			case	oid~channelId~channelName~channelDomain~chaInternalIP~chaInternetIP~subChannelId~subChannelName~appId~appName~appLoginKey~appLoginSecretKey~secretKey~insertTime~lastModify~isActive~version =>
+			case	oid~channelId~channelName~channelDomain~chaInternalIP~chaInternetIP~subChannelId~subChannelName~appId~appName~appLoginKey~appLoginSecretKey~secretKey~channelType~resLimitMode~isOnlyOneVoucher~isHideBillPageEnabled~insertTime~lastModify~isActive~version =>
 				BizChannel(
 					oid,
 					channelId,
@@ -223,6 +259,10 @@ object BizChannel extends ((
 					appLoginKey.getOrElse(""),
 					appLoginSecretKey.getOrElse(""),
 					secretKey.getOrElse(""),
+					channelType,
+					resLimitMode,
+					(isOnlyOneVoucher == 1),
+					(isHideBillPageEnabled == 1),
 					Option(new DateTime(insertTime)),
 					Option(new DateTime(lastModify)),
 					(isActive == 1),
@@ -249,6 +289,10 @@ object BizChannel extends ((
 						AppLoginKey,
 						AppLoginSecretKey,
 						SecretKey,
+						ChannelType,
+						ResLimitMode,
+						IsOnlyOneVoucher,
+						IsHideBillPageEnabled,
 						InsertTime,
 						LastModify,
 						IsActive,
