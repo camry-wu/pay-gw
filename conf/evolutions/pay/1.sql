@@ -41,15 +41,8 @@ create table `BizChannel` (
     PRIMARY KEY (`Oid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
 
--- 业务渠道支持的多种支付方式配置
-create table `BizChannel_PayMethod` (
-	`Oid`				int(11) not null auto_increment,	-- id
-	`BizChannelId`		varchar(32) not null,				-- 渠道配置编号
-	`PayMethodId`		varchar(32) not null,				-- 支付方式编号
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
-
 -- 特定支付方式配置
-create table `BizChannel_PayMethod` (
+create table `PayMethod` (
 	`Oid`				int(11) not null auto_increment,	-- id
 	`PayMethod`			int(10) not null,					-- 支付方式
 	`SpNo`				varchar(50),						-- 商户号
@@ -69,9 +62,18 @@ create table `BizChannel_PayMethod` (
     PRIMARY KEY (`Oid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
 
+-- 业务渠道支持的多种支付方式配置
+create table `BizChannel_PayMethod` (
+	`Oid`				int(11) not null auto_increment,	-- id
+	`BizChannelId`		varchar(32) not null,				-- 渠道配置编号
+	`PayMethodId`		varchar(32) not null,				-- 支付方式编号
+    PRIMARY KEY (`Oid`)
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
+
 
 # --- !Downs
 
 drop table `Announcement`;
 drop table `BizChannel`;
+drop table `PayMethod`;
 drop table `BizChannel_PayMethod`;
